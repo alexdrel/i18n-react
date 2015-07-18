@@ -1,0 +1,43 @@
+{
+  "name": "i18n-react",
+  "version": "0.1.0",
+  "description": "React JS text internationalization and externalizing",
+  "main": "dist/i18n-react.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexdrel/i18n-react"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --port 1818 -d",
+    "build": "tsc -p src",
+    "watch": "webpack -d -w --progress",
+    "examples": "webpack -d --progress",
+    "test": "karma start karma.config.js"
+  },
+  "keywords": [
+    "i18n",
+    "react",
+    "external",
+    "text"
+  ],
+  "author": "Alex Drel",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.10.0"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.3.4",
+    "json-loader": "^0.5.2",
+    "jsx-loader": "^0.13.2",
+    "karma": "0.12.37",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.6",
+    "karma-sourcemap-loader": "^0.3.5",
+    "karma-webpack": "^1.6.0",
+    "node-libs-browser": "^0.5.2",
+    "ts-loader": "^0.4.6",
+    "webpack": "^1.10.1",
+    "webpack-dev-server": "^1.10.1",
+    "yaml-loader": "^0.1.0"
+  }
+}

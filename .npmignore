@@ -1,0 +1,7 @@
+tests
+examples
+webpack*.*
+karma.*
+.git*
+.editor*
+.settings

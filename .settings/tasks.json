@@ -1,0 +1,54 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+
+// A task runner that calls the Typescipt compiler (tsc) and 
+// Compiles a HelloWorld.ts program
+{
+	"version": "0.1.0",
+	
+	// The command is tsc. Assumes that tsc has been installed using npm install -g typescript
+	"command": "tsc",
+	
+	// The command is a shell script
+	"isShellCommand": true,
+
+	// Show the output window only if unrecognized errors occur. 
+	"showOutput": "silent",
+	
+	// args is the HelloWorld program to compile.
+	"args": ["-p", "${fileDirname}"],
+	
+	// use the standard tsc problem matcher to find compile problems
+	// in the output.
+	"problemMatcher": "$tsc"
+}
+
+// A task runner that calls the Typescipt compiler (tsc) and 
+// compiles based on a tsconfig.json file that is present in
+// the root of the folder open in VSCode
+/*
+{
+	"version": "0.1.0",
+	
+	// The command is tsc. Assumes that tsc has been installed using npm install -g typescript
+	"command": "tsc",
+	
+	// The command is a shell script
+	"isShellCommand": true,
+
+	// Show the output window only if unrecognized errors occur. 
+	"showOutput": "silent",
+	
+	// Tell the tsc compiler to use the tsconfig.json from the open folder.
+	"args": ["-p", "."],
+	
+	// use the standard tsc problem matcher to find compile problems
+	// in the output.
+	"problemMatcher": "$tsc"
+}
+*/

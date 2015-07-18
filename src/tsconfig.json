@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "../dist/",
+        "declaration": true
+    },
+    "files": [
+        "i18n-react.ts",
+        "reference.d.ts"
+    ]
+}
