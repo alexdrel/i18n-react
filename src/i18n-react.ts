@@ -28,7 +28,7 @@ var regexes : {[type:string]: RegExp}= {
   strong: /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
   em: /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
   p: /^(.*?)\[(.*?)\](.*)$/,
-  br: /^(.*?)\s*\n\s*()(.*)$/,
+  br: /^(.*?)[^\S\n]*\n()[^\S\n]*([\s\S]*)$/,
   self: /^(.*?)\{\{(.*?)\}\}(.*)$/,
   inter: /^(.*?)\{(.*?)\}(.*)$/
 };
@@ -64,7 +64,7 @@ function M(value: string, vars?: any): React.ReactChildList {
             return compact([ M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) ]);
 
           default:
-            return compact([ M(res[1], vars), React.createElement(type, { key: type }, M(res[2], vars)), M(res[3], vars) ]);
+            return compact([ M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) ]);
         }
       }
     }
@@ -87,6 +87,10 @@ class MDText extends React.Component<any, {}> {
   static texts : any;
   static setTexts = (t: any) => MDText.texts = t;
 
+  static format(text: string, options?: any): React.ReactChildList {
+      return M(text, options);
+  }
+
   static translate(key: string, options?: any): React.ReactChildList {
       var trans: string | any = _.get(MDText.texts, key);
       if(trans==null) {
@@ -95,7 +99,7 @@ class MDText extends React.Component<any, {}> {
 
       if(!_.isString(trans)) {
         var ctx_trans = (options && options.context!=null && _.get(trans, options.context.toString()));
-        if(ctx_trans===false) 
+        if(ctx_trans===false)
           ctx_trans=null;
         if(ctx_trans==null)
           ctx_trans = trans._;

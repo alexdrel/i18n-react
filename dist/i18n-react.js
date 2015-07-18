@@ -29,7 +29,7 @@ var regexes = {
     strong: /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
     em: /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
     p: /^(.*?)\[(.*?)\](.*)$/,
-    br: /^(.*?)\s*\n\s*()(.*)$/,
+    br: /^(.*?)[^\S\n]*\n()[^\S\n]*([\s\S]*)$/,
     self: /^(.*?)\{\{(.*?)\}\}(.*)$/,
     inter: /^(.*?)\{(.*?)\}(.*)$/
 };
@@ -62,7 +62,7 @@ function M(value, vars) {
                 case "self":
                     return compact([M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars)]);
                 default:
-                    return compact([M(res[1], vars), React.createElement(type, { key: type }, M(res[2], vars)), M(res[3], vars)]);
+                    return compact([M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars)]);
             }
         }
     }
@@ -80,6 +80,9 @@ var MDText = (function (_super) {
         }
         _super.call(this, props);
     }
+    MDText.format = function (text, options) {
+        return M(text, options);
+    };
     MDText.translate = function (key, options) {
         var trans = _.get(MDText.texts, key);
         if (trans == null) {

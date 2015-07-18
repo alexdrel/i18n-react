@@ -1,19 +1,20 @@
 var webpack = require("webpack");
 
 module.exports = {
-  entry: { hello: './examples/hello.jsx' },
+  entry: { 
+    hello: './examples/hello/index.jsx',
+    yaml: './examples/yaml/index.jsx' 
+  },
   output: {
-    path: './examples/build',
-    publicPath: 'build',
-    filename: '[name].js',
-    chunkFilename: '[name].[id].js'
+    path: './examples/',
+    filename: '[name]/build/index.js'
   },
   externals: {
     "react": "React"
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    modulesDirectories: [ '.', 'node_modules', 'examples'],
+    modulesDirectories: [ '.', 'node_modules' ],
   },
   module: {
     loaders: [
@@ -21,10 +22,10 @@ module.exports = {
       { test: /\.ya?ml$/, loader: 'json!yaml' }
     ]
   },
-
+  devtool: "eval",
   devServer: {
-    contentBase: "./examples",
-    noInfo: true,
+    contentBase: "./examples", 
+    noInfo: false,
     stats: true
   }
 }
