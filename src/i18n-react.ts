@@ -34,41 +34,49 @@ var regexes : {[type:string]: RegExp}= {
 };
 
 function M(value: string, vars?: any): React.ReactChildList {
-    if(value==null || value=='')
-      return null;
+  if(value==null || value=='')
+    return null;
 
-    if(!value.match(maybeRegex))
-      return value;
+  if(!value.match(maybeRegex))
+    return value;
 
-    for(var type in regexes) {
-      var res = regexes[type].exec(value);
-      if(res) {
-        switch(type) {
-          case "inter":
-            var [vn, flags] = res[2].split(',');
-            var v = _.get(vars, vn);
-            if(v==null) {
-              return res[1]+res[3];
-            } else if(_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
-              return [ M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) ];
-            }
-            var vs : string;
-            if(flags && flags.match(/l/)) {
-              vs = v.toLocaleString();
-            } else {
-              vs = v.toString();
-            }
-            return merge(M(res[1], vars), vs, M(res[3], vars));
-
-          case "self":
-            return compact([ M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) ]);
-
-          default:
-            return compact([ M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) ]);
-        }
+  var res: RegExpExecArray = null,
+      type: string = null;
+  for(var rtype in regexes) {
+    var rres = regexes[rtype].exec(value);
+    if(rres) {
+      if(res == null || rres[1].length < res[1].length) {
+        res = rres;
+        type = rtype;
       }
     }
-    return value;
+  }
+
+  switch(type) {
+    case null:
+      return value;
+    case "inter":
+      var [vn, flags] = res[2].split(',');
+      var v = _.get(vars, vn);
+      if(v==null) {
+        return res[1]+res[3];
+      } else if(_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
+        return [ M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) ];
+      }
+      var vs : string;
+      if(flags && flags.match(/l/)) {
+        vs = v.toLocaleString();
+      } else {
+        vs = v.toString();
+      }
+      return merge(M(res[1], vars), vs, M(res[3], vars));
+
+    case "self":
+      return compact([ M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) ]);
+
+    default:
+      return compact([ M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) ]);
+  }
 }
 
 class MDText extends React.Component<any, {}> {
