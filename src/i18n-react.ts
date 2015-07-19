@@ -11,15 +11,26 @@ var _ = {
   get: require('lodash/object/get')
 };
 
-function compact(array: any[]): any {
-  array = _.compact(array);
-  return (array.length==1) ? array[0]: array;
 }
-function merge(head: any, middle: any, tail: any): any {
-  if(_.isString(head||'') && _.isString(middle) && _.isString(tail||'')) {
-    return (head||'')+middle+(tail||'');
   }
-  return React.createElement('span', null, [head, middle ,tail]);
+function merge2(head: any, tail: any): any {
+  if(head==null) return tail;
+  if(tail==null) return head;
+
+  if(_.isString(head) && _.isString(tail))
+    return head+tail;
+  return [head, tail];
+ }
+
+function merge(head: any, middle: any, tail: any): any {
+  if(head==null) return merge2(middle, tail);
+  if(middle==null) return merge2(head, tail);
+  if(tail==null) return merge2(head, middle);
+
+  if(_.isString(head) && _.isString(middle) && _.isString(tail))
+    return head+middle+tail;
+
+  return  [head, middle,tail];
 }
 
 var maybeRegex = /[\*_\{\[\n]/;
@@ -61,7 +72,7 @@ function M(value: string, vars?: any): React.ReactChildList {
       if(v==null) {
         return res[1]+res[3];
       } else if(_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
-        return [ M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) ];
+        return merge( M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) );
       }
       var vs : string;
       if(flags && flags.match(/l/)) {
@@ -69,13 +80,13 @@ function M(value: string, vars?: any): React.ReactChildList {
       } else {
         vs = v.toString();
       }
-      return merge(M(res[1], vars), vs, M(res[3], vars));
+      return merge( M(res[1], vars), vs, M(res[3], vars) );
 
     case "self":
-      return compact([ M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) ]);
+      return merge( M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) );
 
     default:
-      return compact([ M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) ]);
+      return merge( M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) );
   }
 }
 
