@@ -54,12 +54,16 @@ Points of interest:
 
 
 ## Usage
-Npm compatible packeger (browserify/webpack) for JS/TS is assumed and required.
+Npm compatible packager (browserify/webpack) is recommended, but ```Dist``` folder also contains UMD versions
+(regular and minified) that can be used w/o commonJS packager.
 
-First require it:
 ```js
+/* commonJS */
 var T = require('i18n-react');
+/* when using UMD version w/o modules */
+var T = window['i18n-react'];
 ```
+
 
 Initialize once - probably in an application entry point js:
 ```js
@@ -88,9 +92,10 @@ As documentation is non-existent you are welcomed to consult unit tests for usag
 - react-tools
 
 #### Commands
-* Build dist folder:  ```$ npm run build``` or ```$ npm start```
-* Build & watch dist folder:  ```$ npm run watch```
-* Start dev server for examples: ```$ npm run examples```
+* Build commonJS version:  ```$ npm start```
+* Watch commonJS folder:  ```$ npm run watch```
+* Build UMD version:  ```$ npm run build```
+* Start dev server for examples (http://localhost:1818/webpack-dev-server/examples/): ```$ npm run examples```
 * Build examples: ```$ npm run build-examples```
 * Watch tests (Chrome): ```$ npm test```
 

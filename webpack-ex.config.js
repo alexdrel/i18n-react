@@ -1,13 +1,12 @@
 var webpack = require("webpack");
 
 module.exports = {
-  entry: { 
+  entry: {
     hello: './examples/hello/index.jsx',
-    yaml: './examples/yaml/index.jsx' 
+    yaml: './examples/yaml/index.jsx'
   },
   output: {
-    path: './examples/',
-    filename: '[name]/build/index.js'
+    filename: './examples/[name]/build/index.js'
   },
   externals: {
     "react": "React"
@@ -24,7 +23,6 @@ module.exports = {
   },
   devtool: "eval",
   devServer: {
-    contentBase: "./examples", 
     noInfo: false,
     stats: true
   }

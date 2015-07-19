@@ -1,6 +1,6 @@
 {
   "name": "i18n-react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
   "repository": {
@@ -8,10 +8,12 @@
     "url": "https://github.com/alexdrel/i18n-react"
   },
   "scripts": {
-    "start": "tsc -p src",
-    "watch": "tsc -p src -watch",
-    "examples": "webpack-dev-server --port 1818 -d",
-    "build-examples": "webpack -d --progress",
+    "start": "tsc -p src -d",
+    "prebuild": "webpack --config webpack-dist.config.js --progress -d --output-file i18n-react.umd.js",
+    "build": "webpack --config webpack-dist.config.js --progress -p --output-file i18n-react.umd.min.js",
+    "watch": "tsc -p src -d -watch",
+    "examples": "webpack-dev-server --config webpack-ex.config.js --port 1818 -d",
+    "build-examples": "webpack --config webpack-ex.config.js -d --progress",
     "test": "karma start karma.config.js"
   },
   "keywords": [
