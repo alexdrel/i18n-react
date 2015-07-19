@@ -22,9 +22,7 @@
   ],
   "author": "Alex Drel",
   "license": "MIT",
-  "dependencies": {
-    "lodash": "^3.10.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "jasmine-core": "^2.3.4",
     "json-loader": "^0.5.2",

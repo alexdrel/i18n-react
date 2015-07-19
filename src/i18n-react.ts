@@ -2,17 +2,35 @@
 import React = require('react');
 
 var _ = {
-  assign: require('lodash/object/assign'),
-  values: require('lodash/object/values'),
-  compact: require('lodash/array/compact'),
-  isString: require('lodash/lang/isString'),
-  isObject: require('lodash/lang/isObject'),
-  isEqual: require("lodash/lang/isEqual"),
-  get: require('lodash/object/get')
+  isString: (s:any) => typeof s === 'string' || s instanceof String,
+  isObject: (o:any) => typeof o === 'object',
+  get: (obj: any, path: string): any  => {
+    var spath = path.split('.');
+    for(var i = 0, len = spath.length; i < len; i++) {
+      if(!obj || typeof obj !== 'object') return undefined;
+      obj = obj[spath[i]];
+    }
+    return obj;
+  }
 };
 
+function first(o: any): any {
+  for (var k in o) return o[k];
 }
+
+function isEqualShallow(a: any, b: any) {
+  if(a===b) return true;
+  if(a==null || b==null) return false;
+
+  for(var key in a) {
+    if(!(key in b) || a[key] !== b[key]) return false;
   }
+  for(var key in b) {
+    if(!(key in a) || a[key] !== b[key]) return false;
+  }
+  return true;
+}
+
 function merge2(head: any, tail: any): any {
   if(head==null) return tail;
   if(tail==null) return head;
@@ -123,7 +141,7 @@ class MDText extends React.Component<any, {}> {
         if(ctx_trans==null)
           ctx_trans = trans._;
         if(ctx_trans==null)
-          ctx_trans = _.values(trans)[0];
+          ctx_trans = first(trans);
         if(ctx_trans==null)
           return key;
         trans = ctx_trans;
@@ -133,7 +151,7 @@ class MDText extends React.Component<any, {}> {
   }
 
   shouldComponentUpdate(nextProps: any) {
-    return !_.isEqual(this.props, nextProps);
+    return !isEqualShallow(this.props, nextProps);
   }
 
   render() {

@@ -6,23 +6,56 @@ var __extends = this.__extends || function (d, b) {
 };
 var React = require('react');
 var _ = {
-    assign: require('lodash/object/assign'),
-    values: require('lodash/object/values'),
-    compact: require('lodash/array/compact'),
-    isString: require('lodash/lang/isString'),
-    isObject: require('lodash/lang/isObject'),
-    isEqual: require("lodash/lang/isEqual"),
-    get: require('lodash/object/get')
+    isString: function (s) { return typeof s === 'string' || s instanceof String; },
+    isObject: function (o) { return typeof o === 'object'; },
+    get: function (obj, path) {
+        var spath = path.split('.');
+        for (var i = 0, len = spath.length; i < len; i++) {
+            if (!obj || typeof obj !== 'object')
+                return undefined;
+            obj = obj[spath[i]];
+        }
+        return obj;
+    }
 };
-function compact(array) {
-    array = _.compact(array);
-    return (array.length == 1) ? array[0] : array;
+function first(o) {
+    for (var k in o)
+        return o[k];
+}
+function isEqualShallow(a, b) {
+    if (a === b)
+        return true;
+    if (a == null || b == null)
+        return false;
+    for (var key in a) {
+        if (!(key in b) || a[key] !== b[key])
+            return false;
+    }
+    for (var key in b) {
+        if (!(key in a) || a[key] !== b[key])
+            return false;
+    }
+    return true;
+}
+function merge2(head, tail) {
+    if (head == null)
+        return tail;
+    if (tail == null)
+        return head;
+    if (_.isString(head) && _.isString(tail))
+        return head + tail;
+    return [head, tail];
 }
 function merge(head, middle, tail) {
-    if (_.isString(head || '') && _.isString(middle) && _.isString(tail || '')) {
-        return (head || '') + middle + (tail || '');
-    }
-    return React.createElement('span', null, [head, middle, tail]);
+    if (head == null)
+        return merge2(middle, tail);
+    if (middle == null)
+        return merge2(head, tail);
+    if (tail == null)
+        return merge2(head, middle);
+    if (_.isString(head) && _.isString(middle) && _.isString(tail))
+        return head + middle + tail;
+    return [head, middle, tail];
 }
 var maybeRegex = /[\*_\{\[\n]/;
 var regexes = {
@@ -58,7 +91,7 @@ function M(value, vars) {
                 return res[1] + res[3];
             }
             else if (_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
-                return [M(res[1], vars), React.cloneElement(v, { key: 'r' }), M(res[3], vars)];
+                return merge(M(res[1], vars), React.cloneElement(v, { key: 'r' }), M(res[3], vars));
             }
             var vs;
             if (flags && flags.match(/l/)) {
@@ -69,9 +102,9 @@ function M(value, vars) {
             }
             return merge(M(res[1], vars), vs, M(res[3], vars));
         case "self":
-            return compact([M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars)]);
+            return merge(M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars));
         default:
-            return compact([M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars)]);
+            return merge(M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars));
     }
 }
 var MDText = (function (_super) {
@@ -101,7 +134,7 @@ var MDText = (function (_super) {
             if (ctx_trans == null)
                 ctx_trans = trans._;
             if (ctx_trans == null)
-                ctx_trans = _.values(trans)[0];
+                ctx_trans = first(trans);
             if (ctx_trans == null)
                 return key;
             trans = ctx_trans;
@@ -109,7 +142,7 @@ var MDText = (function (_super) {
         return M(trans, options);
     };
     MDText.prototype.shouldComponentUpdate = function (nextProps) {
-        return !_.isEqual(this.props, nextProps);
+        return !isEqualShallow(this.props, nextProps);
     };
     MDText.prototype.render = function () {
         return React.createElement(this.tag, this.props, MDText.translate(this.props.text, this.props));
