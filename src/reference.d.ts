@@ -6,20 +6,28 @@ declare function require(module: string) : any;
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 declare module 'react' {
+  interface ReactElement<P> {
+      props: P;
+  }
+
   class Component<P, S> {
     constructor(initialProps: P);
     props: P;
-    protected render(): ReactElement | string;
+    protected render(): ReactElement<any> | string;
     protected shouldComponentUpdate(nextProps: P): boolean;
   }
+
   interface ComponentClass<P> {
     new(props?: P, context?: any): Component<P, any>;
   }
 
-  type ReactElement = any;
+  type ReactChild = ReactElement<any> | string | number;
 
-  type ReactChildList = string | ReactElement | ReactElement[];
-  function createElement<P>(type: string | ComponentClass<P>, props: P, ...children: any[]): ReactElement;
-  function cloneElement(el: ReactElement, override?: any) : ReactElement;
-  function renderToStaticMarkup(el: ReactElement): string;
+  // Should be Array<ReactNode> but type aliases cannot be recursive
+  type ReactFragment = {} | Array<ReactChild | any[] | boolean>;
+  type ReactNode = ReactChild | ReactFragment | boolean;
+
+  function createElement<P>(type: string | ComponentClass<P>, props: P, ...children: any[]): ReactElement<any>;
+  function cloneElement(el: ReactElement<any>, override?: any) : ReactElement<any>;
+  function renderToStaticMarkup(el: ReactElement<any>): string;
 }

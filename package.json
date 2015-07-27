@@ -1,8 +1,11 @@
 {
   "name": "i18n-react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
+  "typescript": {
+    "definition": "dist/i18n-react.ext.d.ts"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/alexdrel/i18n-react"

@@ -62,7 +62,7 @@ var regexes : {[type:string]: RegExp}= {
   inter: /^(.*?)\{(.*?)\}(.*)$/
 };
 
-function M(value: string, vars?: any): React.ReactChildList {
+function M(value: string, vars?: any): React.ReactNode {
   if(value==null || value=='')
     return null;
 
@@ -124,11 +124,11 @@ class MDText extends React.Component<any, {}> {
   static texts : any;
   static setTexts = (t: any) => MDText.texts = t;
 
-  static format(text: string, options?: any): React.ReactChildList {
+  static format(text: string, options?: any): React.ReactNode {
       return M(text, options);
   }
 
-  static translate(key: string, options?: any): React.ReactChildList {
+  static translate(key: string, options?: any): React.ReactNode {
       var trans: string | any = _.get(MDText.texts, key);
       if(trans==null) {
         return key;
