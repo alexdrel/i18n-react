@@ -5,7 +5,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "outDir": "../dist/",
-        "declaration": false
+        "declaration": true
     },
     "files": [
         "i18n-react.ts",

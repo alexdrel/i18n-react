@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -73,6 +73,8 @@ function M(value, vars) {
         return value;
     var res = null, type = null;
     for (var rtype in regexes) {
+        if (!regexes.hasOwnProperty(rtype))
+            continue;
         var rres = regexes[rtype].exec(value);
         if (rres) {
             if (res == null || rres[1].length < res[1].length) {

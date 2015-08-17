@@ -71,7 +71,10 @@ function M(value: string, vars?: any): React.ReactNode {
 
   var res: RegExpExecArray = null,
       type: string = null;
+
   for(var rtype in regexes) {
+    if( !regexes.hasOwnProperty( rtype ) ) continue;
+
     var rres = regexes[rtype].exec(value);
     if(rres) {
       if(res == null || rres[1].length < res[1].length) {
