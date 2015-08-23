@@ -1,8 +1,10 @@
+[![Build Status](https://travis-ci.org/alexdrel/i18n-react.svg?branch=master)](https://travis-ci.org/alexdrel/i18n-react)
+
 i18n-react
 ===
 React (JS) text internationalization and externalizing.
 
-##Quick example
+###Quick example
 
 ```js
 var React = require('react');

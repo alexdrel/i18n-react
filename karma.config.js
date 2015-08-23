@@ -7,6 +7,7 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
 
         files: [
+           'tests/PhantomJS_bind-polyfill.js',
            "https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js",
             // all files ending in "_test"
             'tests/*_test.*',
@@ -37,11 +38,11 @@ module.exports = function(config) {
           resolve: {
                 extensions: ['', '.js', '.jsx', '.ts']
           },
-          
+
           externals: {
             "react": "React"
           },
-          
+
           module: {
             loaders: [
               { test: /\.tsx?$/, loader: 'ts' },
