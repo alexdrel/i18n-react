@@ -112,13 +112,7 @@ function M(value: string, vars?: any): React.ReactNode {
 }
 
 class MDText extends React.Component<any, {}> {
-  constructor(tag?: string, props?: any) {
-    if(!_.isString(tag)) {
-      props = tag;
-      this.tag = props.tag || 'span';
-    } else {
-      this.tag = tag;
-    }
+  constructor(props?: any) {
     super(props);
   }
 
@@ -132,8 +126,8 @@ class MDText extends React.Component<any, {}> {
   }
 
   static translate(key: string, options?: any): React.ReactNode {
-      var trans: string | any = _.get(MDText.texts, key);
-      if(trans==null) {
+      var trans: string | any = key && _.get(MDText.texts, key);
+      if(key==null || trans==null) {
         return key;
       }
 
@@ -158,15 +152,26 @@ class MDText extends React.Component<any, {}> {
   }
 
   render() {
+    var tag = this.tag || this.props.tag || 'span';
     // TODO - destructuring props, pending typescript JSX support
-    return React.createElement(this.tag, this.props, MDText.translate(this.props.text, this.props));
+    // remove tag, context, text
+    return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
   }
 
-  static p      = MDText.bind(null,'p');
-  static span   = MDText.bind(null,'span');
-  static div    = MDText.bind(null,'div');
-  static button = MDText.bind(null,'button');
-  static a      = MDText.bind(null,'a');
+  static factory(tag?: string) {
+    var ctor = function MDTextTag(props: any, ctx: any) {
+       MDText.call(this, props, ctx);
+       this.tag = tag;
+    };
+    ctor.prototype = MDText.prototype;
+    return ctor;
+  };
+
+  static p      = MDText.factory('p');
+  static span   = MDText.factory('span');
+  static div    = MDText.factory('div');
+  static button = MDText.factory('button');
+  static a      = MDText.factory('a');
 }
 
 export = MDText;

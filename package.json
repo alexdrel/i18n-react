@@ -1,6 +1,6 @@
 {
   "name": "i18n-react",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
   "typescript": {
@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "tsc -p src -d",
-    "prebuild": "webpack --config webpack-dist.config.js --progress -d --output-file i18n-react.umd.js",
-    "build": "webpack --config webpack-dist.config.js --progress -p --output-file i18n-react.umd.min.js",
+    "prebuild": "tsc -p src -d",
+    "build": "webpack -d --config webpack-umd.config.js && webpack -p --config webpack-umd.config.js --output-filename i18n-react.umd.min.js",
     "watch": "tsc -p src -d -watch",
     "examples": "webpack-dev-server --config webpack-ex.config.js --port 1818 -d",
     "build-examples": "webpack --config webpack-ex.config.js -d --progress",

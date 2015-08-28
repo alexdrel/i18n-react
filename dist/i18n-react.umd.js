@@ -170,22 +170,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	var MDText = (function (_super) {
 	    __extends(MDText, _super);
-	    function MDText(tag, props) {
-	        if (!_.isString(tag)) {
-	            props = tag;
-	            this.tag = props.tag || 'span';
-	        }
-	        else {
-	            this.tag = tag;
-	        }
+	    function MDText(props) {
 	        _super.call(this, props);
 	    }
 	    MDText.format = function (text, options) {
 	        return M(text, options);
 	    };
 	    MDText.translate = function (key, options) {
-	        var trans = _.get(MDText.texts, key);
-	        if (trans == null) {
+	        var trans = key && _.get(MDText.texts, key);
+	        if (key == null || trans == null) {
 	            return key;
 	        }
 	        if (!_.isString(trans)) {
@@ -206,14 +199,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return !isEqualShallow(this.props, nextProps);
 	    };
 	    MDText.prototype.render = function () {
-	        return React.createElement(this.tag, this.props, MDText.translate(this.props.text, this.props));
+	        var tag = this.tag || this.props.tag || 'span';
+	        return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
 	    };
+	    MDText.factory = function (tag) {
+	        var ctor = function MDTextTag(props, ctx) {
+	            MDText.call(this, props, ctx);
+	            this.tag = tag;
+	        };
+	        ctor.prototype = MDText.prototype;
+	        return ctor;
+	    };
+	    ;
 	    MDText.setTexts = function (t) { return MDText.texts = t; };
-	    MDText.p = MDText.bind(null, 'p');
-	    MDText.span = MDText.bind(null, 'span');
-	    MDText.div = MDText.bind(null, 'div');
-	    MDText.button = MDText.bind(null, 'button');
-	    MDText.a = MDText.bind(null, 'a');
+	    MDText.p = MDText.factory('p');
+	    MDText.span = MDText.factory('span');
+	    MDText.div = MDText.factory('div');
+	    MDText.button = MDText.factory('button');
+	    MDText.a = MDText.factory('a');
 	    return MDText;
 	})(React.Component);
 	module.exports = MDText;
