@@ -8,11 +8,11 @@ declare class MDText extends React.Component<any, {}> {
     static translate(key: string, options?: any): React.ReactNode;
     shouldComponentUpdate(nextProps: any): boolean;
     render(): React.ReactElement<any>;
-    static factory(tag?: string): (props: any, ctx: any) => void;
-    static p: (props: any, ctx: any) => void;
-    static span: (props: any, ctx: any) => void;
-    static div: (props: any, ctx: any) => void;
-    static button: (props: any, ctx: any) => void;
-    static a: (props: any, ctx: any) => void;
+    static factory(tag?: string): typeof MDText;
+    static p: typeof MDText;
+    static span: typeof MDText;
+    static div: typeof MDText;
+    static button: typeof MDText;
+    static a: typeof MDText;
 }
 export = MDText;

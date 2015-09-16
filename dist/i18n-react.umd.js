@@ -60,8 +60,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
-	    __.prototype = b.prototype;
-	    d.prototype = new __();
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var React = __webpack_require__(/*! react */ 1);
 	var _ = {
@@ -203,12 +202,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
 	    };
 	    MDText.factory = function (tag) {
-	        var ctor = function MDTextTag(props, ctx) {
-	            MDText.call(this, props, ctx);
-	            this.tag = tag;
-	        };
-	        ctor.prototype = MDText.prototype;
-	        return ctor;
+	        return (function (_super) {
+	            __extends(MDTextTag, _super);
+	            function MDTextTag(props) {
+	                _super.call(this, props);
+	                this.tag = tag;
+	            }
+	            return MDTextTag;
+	        })(MDText);
 	    };
 	    ;
 	    MDText.setTexts = function (t) { return MDText.texts = t; };

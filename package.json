@@ -1,6 +1,6 @@
 {
   "name": "i18n-react",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
   "typescript": {
@@ -40,8 +40,8 @@
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webpack": "1.7.0",
     "node-libs-browser": "^0.5.2",
-    "ts-loader": "^0.5.0",
-    "typescript": "^1.5.3",
+    "ts-loader": "^0.5.5",
+    "typescript": "^1.6.2",
     "webpack": "^1.11.0",
     "webpack-dev-server": "^1.10.1",
     "yaml-loader": "^0.1.0"

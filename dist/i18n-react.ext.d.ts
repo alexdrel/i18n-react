@@ -1,7 +1,7 @@
 declare module 'i18n-react' {
   import React = require('react');
   class MDText extends React.Component<any, {}> {
-    constructor(tag?: string, props?: any);
+    constructor(props?: any);
     tag: string;
     static texts: any;
     static setTexts: (t: any) => any;
@@ -9,11 +9,12 @@ declare module 'i18n-react' {
     static translate(key: string, options?: any): React.ReactNode;
     shouldComponentUpdate(nextProps: any): boolean;
     render(): React.ReactElement<any>;
-    static p: any;
-    static span: any;
-    static div: any;
-    static button: any;
-    static a: any;
-  }
+    static factory(tag?: string): typeof MDText;
+    static p: typeof MDText;
+    static span: typeof MDText;
+    static div: typeof MDText;
+    static button: typeof MDText;
+    static a: typeof MDText;
+}
   export = MDText;
 }

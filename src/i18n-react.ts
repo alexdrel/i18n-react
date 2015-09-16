@@ -158,13 +158,10 @@ class MDText extends React.Component<any, {}> {
     return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
   }
 
-  static factory(tag?: string) {
-    var ctor = function MDTextTag(props: any, ctx: any) {
-       MDText.call(this, props, ctx);
-       this.tag = tag;
+  static factory(tag?: string): typeof MDText {
+    return class MDTextTag extends MDText {
+       constructor(props: any) { super(props); this.tag = tag; }
     };
-    ctor.prototype = MDText.prototype;
-    return ctor;
   };
 
   static p      = MDText.factory('p');

@@ -4,4 +4,4 @@ webpack*.*
 karma.*
 .git*
 .editor*
-.settings
+.vscode
