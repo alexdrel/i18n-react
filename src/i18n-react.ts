@@ -113,11 +113,27 @@ function M(value: string, vars?: any): React.ReactNode {
   }
 }
 
+function rangeHit(node: any, val: number) {
+  for(var t in node) {
+    if( !node.hasOwnProperty( t ) ) continue;
+    var range = t.match(/^(-?\d+)\.\.(-?\d+)$/);
+    if(range && (+range[1] <= val && val <= +range[2])) {
+      return node[t];
+    }
+  }
+}
+
 function resolveContextPath(node: any, p: number, path: string[], context: any) : string {
   var key = path[p];
   var trans: any;
-  if(key!=null && context[key]!=null)
+
+  if(key!=null && context[key]!=null) {
     trans = _.get(node, context[key].toString());
+    if(trans==null && (+context[key])===context[key]) {
+      trans = rangeHit(node, +context[key]);
+    }
+  }
+
   if(trans==null)
     trans = node._;
   if(trans==null)
@@ -133,7 +149,7 @@ function resolveContext(node: any, context: any) : string {
   if(context==null) {
     return resolveContextPath(node, 0, [], null);
   } else if(!_.isObject(context)) {
-    return resolveContextPath(node, 0, ['_'], { _: context.toString() });
+    return resolveContextPath(node, 0, ['_'], { _: context });
   } else {
     var ctx_keys : string[] = [];
     if(node.__) {

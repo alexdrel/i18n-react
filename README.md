@@ -45,13 +45,14 @@ greetings:
 longTime:
   0: Not a day no see
   1: 1 day no see
+  '2..4': A few days no see
   _: "[{context} days][Long time no see]"
 ```
 
 Points of interest:
 * {who} - variable interpolation
 * formal/informal - context selectors
-* longTime - pluralization
+* longTime - pluralization and range
 * [X days][...] - renders two paragraphs
 
 

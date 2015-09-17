@@ -9,6 +9,7 @@ T.setTexts( require('./texts.yml'));
   <section>
     <HelloBlock name="World" style="formal" days={0}/>
     <HelloBlock name="State" style="normal" days={1}/>
+    <HelloBlock name="City" style="informal" days={3}/>
     <HelloBlock name="Town" style="informal" days={5}/>
   </section>,
   document.getElementById('content')
