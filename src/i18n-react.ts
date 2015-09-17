@@ -15,7 +15,9 @@ var _ = {
 };
 
 function first(o: any): any {
-  for (var k in o) return o[k];
+  for (var k in o) {
+    if(k!='__') return o[k];
+  }
 }
 
 function isEqualShallow(a: any, b: any) {
@@ -91,7 +93,7 @@ function M(value: string, vars?: any): React.ReactNode {
       var [vn, flags] = res[2].split(',');
       var v = _.get(vars, vn);
       if(v==null) {
-        return res[1]+res[3];
+        return merge( M(res[1], vars), null,  M(res[3], vars) );
       } else if(_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
         return merge( M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) );
       }
@@ -111,6 +113,41 @@ function M(value: string, vars?: any): React.ReactNode {
   }
 }
 
+function resolveContextPath(node: any, p: number, path: string[], context: any) : string {
+  var key = path[p];
+  var trans: any;
+  if(key!=null && context[key]!=null)
+    trans = _.get(node, context[key].toString());
+  if(trans==null)
+    trans = node._;
+  if(trans==null)
+    trans = first(node);
+
+  if(trans!=null && !_.isString(trans)) {
+    return resolveContextPath(trans, p+1, path, context);
+  }
+  return trans;
+}
+
+function resolveContext(node: any, context: any) : string {
+  if(context==null) {
+    return resolveContextPath(node, 0, [], null);
+  } else if(!_.isObject(context)) {
+    return resolveContextPath(node, 0, ['_'], { _: context.toString() });
+  } else {
+    var ctx_keys : string[] = [];
+    if(node.__) {
+      ctx_keys = node.__.split('.');
+    } else {
+      for(var k in context) {
+        if( !context.hasOwnProperty( k ) ) continue;
+        ctx_keys.push(k);
+      }
+    }
+    return resolveContextPath(node, 0, ctx_keys, context);
+  }
+}
+
 class MDText extends React.Component<any, {}> {
   constructor(props?: any) {
     super(props);
@@ -126,22 +163,16 @@ class MDText extends React.Component<any, {}> {
   }
 
   static translate(key: string, options?: any): React.ReactNode {
-      var trans: string | any = key && _.get(MDText.texts, key);
-      if(key==null || trans==null) {
-        return key;
+      if(key==null) return null;
+
+      var trans: string | any = _.get(MDText.texts, key);
+
+      if(trans!=null && !_.isString(trans)) {
+        trans = resolveContext(trans, options && options.context);
       }
 
-      if(!_.isString(trans)) {
-        var ctx_trans = (options && options.context!=null && _.get(trans, options.context.toString()));
-        if(ctx_trans===false)
-          ctx_trans=null;
-        if(ctx_trans==null)
-          ctx_trans = trans._;
-        if(ctx_trans==null)
-          ctx_trans = first(trans);
-        if(ctx_trans==null)
-          return key;
-        trans = ctx_trans;
+      if(trans==null) {
+        return key;
       }
 
       return M(trans, options);
