@@ -87,7 +87,15 @@ Use it anywhere:
  <h1>{T.translate("path.to.string", { context: "context", var1: 2})}</h1>
 ```
 
-As documentation is non-existent you are welcomed to consult unit tests for usage details and examples.
+### Difference between Keys and Context
+Text attribute is a key that should point to string or JSON object, it has to be present in the langauge resource.
+Then if needed the context is used to disambiguate betwen multiple texts according to the following rules:
+1. Exact match for the context value.
+1. For numeric context values - key with range, e.g. 2..4 that matches context value.
+1. Explicit default - '_' key.
+1. First key.
+
+You are welcomed to consult unit tests for usage details and examples.
 
 ## Development
 #### Global npm modules dependencies for required for development
