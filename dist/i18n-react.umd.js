@@ -77,8 +77,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	function first(o) {
-	    for (var k in o)
-	        return o[k];
+	    for (var k in o) {
+	        if (k != '__')
+	            return o[k];
+	    }
 	}
 	function isEqualShallow(a, b) {
 	    if (a === b)
@@ -148,7 +150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _a = res[2].split(','), vn = _a[0], flags = _a[1];
 	            var v = _.get(vars, vn);
 	            if (v == null) {
-	                return res[1] + res[3];
+	                return merge(M(res[1], vars), null, M(res[3], vars));
 	            }
 	            else if (_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
 	                return merge(M(res[1], vars), React.cloneElement(v, { key: 'r' }), M(res[3], vars));
@@ -167,6 +169,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return merge(M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars));
 	    }
 	}
+	function rangeHit(node, val) {
+	    for (var t in node) {
+	        if (!node.hasOwnProperty(t))
+	            continue;
+	        var range = t.match(/^(-?\d+)\.\.(-?\d+)$/);
+	        if (range && (+range[1] <= val && val <= +range[2])) {
+	            return node[t];
+	        }
+	    }
+	}
+	function resolveContextPath(node, p, path, context) {
+	    var key = path[p];
+	    var trans;
+	    if (key != null && context[key] != null) {
+	        trans = _.get(node, context[key].toString());
+	        if (trans == null && (+context[key]) === context[key]) {
+	            trans = rangeHit(node, +context[key]);
+	        }
+	    }
+	    if (trans == null)
+	        trans = node._;
+	    if (trans == null)
+	        trans = first(node);
+	    if (trans != null && !_.isString(trans)) {
+	        return resolveContextPath(trans, p + 1, path, context);
+	    }
+	    return trans;
+	}
+	function resolveContext(node, context) {
+	    if (context == null) {
+	        return resolveContextPath(node, 0, [], null);
+	    }
+	    else if (!_.isObject(context)) {
+	        return resolveContextPath(node, 0, ['_'], { _: context });
+	    }
+	    else {
+	        var ctx_keys = [];
+	        if (node.__) {
+	            ctx_keys = node.__.split('.');
+	        }
+	        else {
+	            for (var k in context) {
+	                if (!context.hasOwnProperty(k))
+	                    continue;
+	                ctx_keys.push(k);
+	            }
+	        }
+	        return resolveContextPath(node, 0, ctx_keys, context);
+	    }
+	}
 	var MDText = (function (_super) {
 	    __extends(MDText, _super);
 	    function MDText(props) {
@@ -176,21 +228,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return M(text, options);
 	    };
 	    MDText.translate = function (key, options) {
-	        var trans = key && _.get(MDText.texts, key);
-	        if (key == null || trans == null) {
-	            return key;
+	        if (key == null)
+	            return null;
+	        var trans = _.get(MDText.texts, key);
+	        if (trans != null && !_.isString(trans)) {
+	            trans = resolveContext(trans, options && options.context);
 	        }
-	        if (!_.isString(trans)) {
-	            var ctx_trans = (options && options.context != null && _.get(trans, options.context.toString()));
-	            if (ctx_trans === false)
-	                ctx_trans = null;
-	            if (ctx_trans == null)
-	                ctx_trans = trans._;
-	            if (ctx_trans == null)
-	                ctx_trans = first(trans);
-	            if (ctx_trans == null)
-	                return key;
-	            trans = ctx_trans;
+	        if (trans == null) {
+	            return key;
 	        }
 	        return M(trans, options);
 	    };

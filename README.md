@@ -98,10 +98,6 @@ Then if needed the context is used to disambiguate betwen multiple texts accordi
 You are welcomed to consult unit tests for usage details and examples.
 
 ## Development
-#### Global npm modules dependencies for required for development
-- typescript
-- react-tools
-
 #### Commands
 * Build commonJS version:  ```$ npm start```
 * Watch commonJS folder:  ```$ npm run watch```
