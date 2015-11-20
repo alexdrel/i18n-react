@@ -59,6 +59,35 @@ describe("i18n-react", () => {
     expect(html({ text: "p3"})).toBe("<span><p>a</p><p>b</p><p>c</p></span>");;
   });
 
+  it("format renders <h1-4>", () => {
+    expect(formatHTML("#Head\nText")).toBe("<h1>Head</h1>Text");
+    expect(formatHTML("##Head\nText")).toBe("<h2>Head</h2>Text");
+    expect(formatHTML("###Head\nText")).toBe("<h3>Head</h3>Text");
+    expect(formatHTML("####Head\nText")).toBe("<h4>Head</h4>Text");
+
+    expect(formatHTML("#Head#\nText")).toBe("<h1>Head</h1>Text");
+    expect(formatHTML("##Head##\nText")).toBe("<h2>Head</h2>Text");
+    expect(formatHTML("###Head###\nText")).toBe("<h3>Head</h3>Text");
+    expect(formatHTML("####Head###\nText")).toBe("<h4>Head</h4>Text");
+
+    expect(formatHTML("p\n#Head#\nText")).toBe("p<h1>Head</h1>Text");
+    expect(formatHTML("p\n  ##Head\nText")).toBe("p<h2>Head</h2>Text");
+    expect(formatHTML("p\n  ###Head###   \nText")).toBe("p<h3>Head</h3>Text");
+    expect(formatHTML("p\n#Head #\nText")).toBe("p<h1>Head </h1>Text");
+    expect(formatHTML("p\n#Head \nText")).toBe("p<h1>Head</h1>Text");
+  });
+
+  it("format renders multiple <h1-4> in a text block", () => {
+    expect(formatHTML("# Lorem\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n## Quisque\nQuisque sit amet nisi quis eros cursus finibus quis sed nisl.\n"))
+      .toContain('<h1>');
+  });
+
+  it("format ignores midline #", () => {
+    expect(formatHTML("a#\nText")).toBe("a#<br>Text");
+    expect(formatHTML("ttt##xxx\nText")).toBe("ttt##xxx<br>Text");
+
+  });
+
   it("<T> transfers html attributes", () => {
     T.setTexts({ a: "a", b: "{val}" });
     expect(html({ text: "a", className: "cl"})).toBe("<span class=\"cl\">a</span>");

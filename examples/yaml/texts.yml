@@ -13,6 +13,10 @@ longTime:
   _: "[{context} days][Long time no see]"
 
 lorem: |
+  # Lorem
   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ## Quisque
   Quisque sit amet nisi quis eros cursus finibus quis sed nisl.
-  Integer efficitur pharetra pretium. Sed semper dui vitae nibh scelerisque sodales.
+  ### Integer
+  Integer efficitur pharetra pretium.
+  Sed semper dui vitae nibh scelerisque sodales.

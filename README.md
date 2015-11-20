@@ -11,7 +11,7 @@ var React = require('react');
 var T = require('i18n-react');
 
 T.setTexts({
-  greeting: "Hello, World! My name is *{myName}*! \n {{howAreYou}}",
+  greeting: "#Hello, World!\n My name is *{myName}*! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
 });
 
@@ -23,7 +23,8 @@ React.render(
 
 Unsurprisingly renders:
 ********
-Hello, World! My name is **i18n-react**!
+#Hello, World!
+My name is **i18n-react**!
 
 _How do you do?_
 
