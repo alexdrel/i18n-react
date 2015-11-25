@@ -30,4 +30,5 @@ declare module 'react' {
   function createElement<P>(type: string | ComponentClass<P>, props: P, ...children: any[]): ReactElement<any>;
   function cloneElement(el: ReactElement<any>, override?: any) : ReactElement<any>;
   function renderToStaticMarkup(el: ReactElement<any>): string;
+  function isValidElement(e: any): boolean;
 }

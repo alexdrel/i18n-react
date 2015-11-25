@@ -156,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (v == null) {
 	                return merge(M(res[1], vars), null, M(res[3], vars));
 	            }
-	            else if (_.isObject(v) && Object.getPrototypeOf(v)._isReactElement) {
+	            else if (React.isValidElement(v)) {
 	                return merge(M(res[1], vars), React.cloneElement(v, { key: 'r' }), M(res[3], vars));
 	            }
 	            var vs;
