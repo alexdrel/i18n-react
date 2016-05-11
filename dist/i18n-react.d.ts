@@ -1,18 +1,12 @@
 import React = require('react');
-declare class MDText extends React.Component<any, {}> {
-    constructor(props?: any);
-    tag: string;
-    static texts: any;
-    static setTexts: (t: any) => any;
-    static format(text: string, options?: any): React.ReactNode;
-    static translate(key: string, options?: any): React.ReactNode;
-    shouldComponentUpdate(nextProps: any): boolean;
-    render(): React.ReactElement<any>;
-    static factory(tag?: string): typeof MDText;
-    static p: typeof MDText;
-    static span: typeof MDText;
-    static div: typeof MDText;
-    static button: typeof MDText;
-    static a: typeof MDText;
-}
-export = MDText;
+export declare var format: (text: string, options?: any) => React.ReactElement<any> | string | number | {} | (React.ReactElement<any> | string | number | any[] | boolean)[] | boolean;
+export declare var texts: any;
+export declare var setTexts: (t: any) => any;
+export declare function translate(key: string, options?: any): React.ReactNode;
+export declare function factory(tag: string): (props: any) => React.ReactElement<any>;
+export declare var p: (props: any) => React.ReactElement<any>;
+export declare var span: (props: any) => React.ReactElement<any>;
+export declare var div: (props: any) => React.ReactElement<any>;
+export declare var button: (props: any) => React.ReactElement<any>;
+export declare var a: (props: any) => React.ReactElement<any>;
+export default function T(props: any): React.ReactElement<any>;

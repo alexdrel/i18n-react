@@ -8,7 +8,7 @@ T.setTexts({
 });
 
 ReactDOM.render(
-  <T text="greeting" myName="i18n-react"/>,
+  <T.span text="greeting" myName="i18n-react"/>,
   document.getElementById('content')
 );
 

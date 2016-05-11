@@ -2,7 +2,7 @@
 
 import React = require('react');
 import renderElement from './renderElement';
-import T = require('../src/i18n-react');
+import * as T from '../src/i18n-react';
 
 describe("i18n-react", () => {
 
@@ -24,7 +24,7 @@ describe("i18n-react", () => {
   });
 
   function html(o?: any): string {
-    return renderElement(React.createElement(T, o));
+    return renderElement(React.createElement(T.default, o));
   }
 
   it("<T> renders <strong>", () => {

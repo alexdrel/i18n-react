@@ -27,7 +27,7 @@ declare module 'react' {
   type ReactFragment = {} | Array<ReactChild | any[] | boolean>;
   type ReactNode = ReactChild | ReactFragment | boolean;
 
-  function createElement<P>(type: string | ComponentClass<P>, props: P, ...children: any[]): ReactElement<any>;
+  function createElement<P>(type: string | ComponentClass<P> | ((props?: any) => any), props: P, ...children: any[]): ReactElement<any>;
   function cloneElement(el: ReactElement<any>, override?: any) : ReactElement<any>;
   function renderToStaticMarkup(el: ReactElement<any>): string;
   function isValidElement(e: any): boolean;

@@ -1,9 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var React = require('react');
 var _ = {
     isString: function (s) { return typeof s === 'string' || s instanceof String; },
@@ -110,7 +105,7 @@ function M(value, vars) {
             }
             return merge(M(res[1], vars), vs, M(res[3], vars));
         case "self":
-            return merge(M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars));
+            return merge(M(res[1], vars), translate(res[2], vars), M(res[3], vars));
         default:
             return merge(M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars));
     }
@@ -165,50 +160,34 @@ function resolveContext(node, context) {
         return resolveContextPath(node, 0, ctx_keys, context);
     }
 }
-var MDText = (function (_super) {
-    __extends(MDText, _super);
-    function MDText(props) {
-        _super.call(this, props);
+exports.format = function (text, options) { return M(text, options); };
+exports.texts = null;
+exports.setTexts = function (t) { return exports.texts = t; };
+function translate(key, options) {
+    if (key == null)
+        return null;
+    var trans = _.get(exports.texts, key);
+    if (trans != null && !_.isString(trans)) {
+        trans = resolveContext(trans, options && options.context);
     }
-    MDText.format = function (text, options) {
-        return M(text, options);
-    };
-    MDText.translate = function (key, options) {
-        if (key == null)
-            return null;
-        var trans = _.get(MDText.texts, key);
-        if (trans != null && !_.isString(trans)) {
-            trans = resolveContext(trans, options && options.context);
-        }
-        if (trans == null) {
-            return key;
-        }
-        return M(trans, options);
-    };
-    MDText.prototype.shouldComponentUpdate = function (nextProps) {
-        return !isEqualShallow(this.props, nextProps);
-    };
-    MDText.prototype.render = function () {
-        var tag = this.tag || this.props.tag || 'span';
-        return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
-    };
-    MDText.factory = function (tag) {
-        return (function (_super) {
-            __extends(MDTextTag, _super);
-            function MDTextTag(props) {
-                _super.call(this, props);
-                this.tag = tag;
-            }
-            return MDTextTag;
-        }(MDText));
-    };
-    ;
-    MDText.setTexts = function (t) { return MDText.texts = t; };
-    MDText.p = MDText.factory('p');
-    MDText.span = MDText.factory('span');
-    MDText.div = MDText.factory('div');
-    MDText.button = MDText.factory('button');
-    MDText.a = MDText.factory('a');
-    return MDText;
-}(React.Component));
-module.exports = MDText;
+    if (trans == null) {
+        return key;
+    }
+    return M(trans, options);
+}
+exports.translate = translate;
+function factory(tag) {
+    return function (props) { return React.createElement(tag, props, translate(props.text, props)); };
+}
+exports.factory = factory;
+exports.p = factory('p');
+exports.span = factory('span');
+exports.div = factory('div');
+exports.button = factory('button');
+exports.a = factory('a');
+function T(props) {
+    return React.createElement(props.tag || 'span', props, translate(props.text, props));
+}
+exports.__esModule = true;
+exports["default"] = T;
+;

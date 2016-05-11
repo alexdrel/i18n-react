@@ -110,7 +110,7 @@ function M(value: string, vars?: any): React.ReactNode {
       return merge( M(res[1], vars), vs, M(res[3], vars) );
 
     case "self":
-      return merge( M(res[1], vars), MDText.translate(res[2], vars), M(res[3], vars) );
+      return merge( M(res[1], vars), translate(res[2], vars), M(res[3], vars) );
 
     default:
       return merge( M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) );
@@ -168,58 +168,39 @@ function resolveContext(node: any, context: any) : string {
   }
 }
 
-class MDText extends React.Component<any, {}> {
-  constructor(props?: any) {
-    super(props);
+export var format = M;
+
+export var texts: any = null;
+export var setTexts = (t: any) => texts = t;
+
+
+export function translate(key: string, options?: any): React.ReactNode {
+  if(key==null) return null;
+
+  var trans: string | any = _.get(texts, key);
+
+  if(trans!=null && !_.isString(trans)) {
+    trans = resolveContext(trans, options && options.context);
   }
 
-  tag: string;
-
-  static texts : any;
-  static setTexts = (t: any) => MDText.texts = t;
-
-  static format(text: string, options?: any): React.ReactNode {
-      return M(text, options);
+  if(trans==null) {
+    return key;
   }
 
-  static translate(key: string, options?: any): React.ReactNode {
-      if(key==null) return null;
-
-      var trans: string | any = _.get(MDText.texts, key);
-
-      if(trans!=null && !_.isString(trans)) {
-        trans = resolveContext(trans, options && options.context);
-      }
-
-      if(trans==null) {
-        return key;
-      }
-
-      return M(trans, options);
-  }
-
-  shouldComponentUpdate(nextProps: any) {
-    return !isEqualShallow(this.props, nextProps);
-  }
-
-  render() {
-    var tag = this.tag || this.props.tag || 'span';
-    // TODO - destructuring props, pending typescript JSX support
-    // remove tag, context, text
-    return React.createElement(tag, this.props, MDText.translate(this.props.text, this.props));
-  }
-
-  static factory(tag?: string): typeof MDText {
-    return class MDTextTag extends MDText {
-       constructor(props: any) { super(props); this.tag = tag; }
-    };
-  };
-
-  static p      = MDText.factory('p');
-  static span   = MDText.factory('span');
-  static div    = MDText.factory('div');
-  static button = MDText.factory('button');
-  static a      = MDText.factory('a');
+  return M(trans, options);
 }
 
-export = MDText;
+export function factory(tag: string) {
+  return (props: any) => React.createElement(tag, props, translate(props.text, props));
+}
+
+export var p      = factory('p');
+export var span   = factory('span');
+export var li     = factory('li');
+export var div    = factory('div');
+export var button = factory('button');
+export var a      = factory('a');
+
+export default function T(props: any) {
+  return React.createElement(props.tag || 'span', props, translate(props.text, props));
+};
