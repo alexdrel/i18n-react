@@ -1,20 +1,22 @@
 declare module 'i18n-react' {
   import React = require('react');
-  class MDText extends React.Component<any, {}> {
-    constructor(props?: any);
-    tag: string;
-    static texts: any;
-    static setTexts: (t: any) => any;
-    static format(text: string, options?: any): React.ReactNode;
-    static translate(key: string, options?: any): React.ReactNode;
-    shouldComponentUpdate(nextProps: any): boolean;
-    render(): React.ReactElement<any>;
-    static factory(tag?: string): typeof MDText;
-    static p: typeof MDText;
-    static span: typeof MDText;
-    static div: typeof MDText;
-    static button: typeof MDText;
-    static a: typeof MDText;
-}
-  export = MDText;
+  export class MDText {
+      texts: any;
+      constructor(texts: any);
+      setTexts(texts: any): void;
+      notFound: string;
+      interpolate(exp: string, vars: any): any;
+      format(value: string, vars?: any): React.ReactNode;
+      translate(key: string, options?: any): React.ReactNode;
+      factory(tag: string): (props: any) => React.ReactElement<any>;
+      p: (props: any) => React.ReactElement<any>;
+      span: (props: any) => React.ReactElement<any>;
+      li: (props: any) => React.ReactElement<any>;
+      div: (props: any) => React.ReactElement<any>;
+      button: (props: any) => React.ReactElement<any>;
+      a: (props: any) => React.ReactElement<any>;
+      text: (props: any) => React.ReactElement<any>;
+  }
+  var singleton: MDText;
+  export default singleton;
 }

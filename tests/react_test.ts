@@ -2,10 +2,9 @@
 
 import React = require('react');
 import renderElement from './renderElement';
-import * as T from '../src/i18n-react';
+import T from '../src/i18n-react';
 
 describe("i18n-react", () => {
-
   function formatHTML(text: string, o?: any): string {
     var s = renderElement(React.createElement('super', null, T.format(text, o)));
     return s.replace(/<\/?super>/g, '');
@@ -24,7 +23,7 @@ describe("i18n-react", () => {
   });
 
   function html(o?: any): string {
-    return renderElement(React.createElement(T.default, o));
+    return renderElement(React.createElement(T.text, o));
   }
 
   it("<T> renders <strong>", () => {

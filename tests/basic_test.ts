@@ -1,38 +1,37 @@
 /// <reference path="./jasmine.d.ts" />
 /// <reference path="../src/reference.d.ts" />
 
-import T = require('../src/i18n-react');
+import { MDText } from '../src/i18n-react';
 
 describe("i18n-react translate", () => {
-
-  beforeAll(() => {
-    T.setTexts({
-       a: "A",
-       aa: {
-         b: {
-           c: "AABC"
-         }
-       },
-       b: "B",
-       c: {
-         a: "CA",
-         b: "CB",
-         _: "CX"
-       },
-       d: {
-         a: "DA",
-         b: "DB"
-       },
-       plural: {
-         "0": "No stars",
-         "1": "A single star",
-         _: "{context} stars"
-       },
-       self: {
+  let T = new MDText({
+      a: "A",
+      aa: {
+        b: {
+          c: "AABC"
+        }
+      },
+      b: "B",
+      c: {
+        a: "CA",
+        b: "CB",
+        _: "CX"
+      },
+      d: {
+        a: "DA",
+        b: "DB",
+        c: "DC{val}"
+      },
+      plural: {
+        "0": "No stars",
+        "1": "A single star",
+        _: "{context} stars"
+      },
+      self: {
         aabc: "{{aa.b.c}}",
-        d: "{{d}}"
-       }
-    });
+        d: "{{d}}",
+        dc: "{{d.c}}"
+      }
   });
 
   it("loads plain string", () => {
@@ -68,14 +67,31 @@ describe("i18n-react translate", () => {
     expect(T.translate('plural', { context: 5})).toBe("5 stars");
   });
 
-  it("can reuse strings", () => {
+  it("can reference keys", () => {
     expect(T.translate('self.aabc')).toBe("AABC");
-    expect(T.translate('self.d', { context: 'a'})).toBe("DA");
+    expect(T.translate('self.d', { context: 'b'})).toBe("DB");
+  });
+
+  it("can reference keys with params", () => {
+    expect(T.translate('self.dc', { val: 'X'})).toBe("DCX");
+  });
+
+  it("handles missing keys", () => {
+    expect(T.translate('na.na')).toBe("na.na");
+    expect(T.translate('na.na', { context: 'X'})).toBe("na.na");
+    expect(T.translate('na.na', { notFound: 'NA'})).toBe("NA");
+    T.notFound = '_NA_';
+    expect(T.translate('na.na')).toBe("_NA_");
+    expect(T.translate('na.na', { notFound: 'NA'})).toBe("NA");
+    T.notFound = null;
+    expect(T.translate('na.na')).toBeNull();
+    T.notFound = undefined;
+    expect(T.translate('na.na')).toBe("na.na");
   });
 });
 
 describe("i18n-react format", () => {
-
+  let T = new MDText(null);
   it("interpolotes variable", () => {
     expect(T.format("{val}", { val: 'x'})).toBe('x');
     expect(T.format("b{val}", { val: 'x'})).toBe('bx');

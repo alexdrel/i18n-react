@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var T = require('i18n-react');
+var T = require('i18n-react').default;
 var HelloBlock = require('./hello-block');
 
 /* Initialize once - probably in entry point js somwehere near the router */

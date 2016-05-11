@@ -1,6 +1,6 @@
 var ReactDOM = require('react-dom');
 var React = require('react');
-var T = require('i18n-react');
+var T = require('i18n-react').default;
 
 T.setTexts({
   greeting: "#Hello, World!\n My name is *{myName}*! \n {{howAreYou}}",

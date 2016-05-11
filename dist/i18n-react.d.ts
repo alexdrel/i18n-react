@@ -1,12 +1,20 @@
 import React = require('react');
-export declare var format: (text: string, options?: any) => React.ReactElement<any> | string | number | {} | (React.ReactElement<any> | string | number | any[] | boolean)[] | boolean;
-export declare var texts: any;
-export declare var setTexts: (t: any) => any;
-export declare function translate(key: string, options?: any): React.ReactNode;
-export declare function factory(tag: string): (props: any) => React.ReactElement<any>;
-export declare var p: (props: any) => React.ReactElement<any>;
-export declare var span: (props: any) => React.ReactElement<any>;
-export declare var div: (props: any) => React.ReactElement<any>;
-export declare var button: (props: any) => React.ReactElement<any>;
-export declare var a: (props: any) => React.ReactElement<any>;
-export default function T(props: any): React.ReactElement<any>;
+export declare class MDText {
+    texts: any;
+    constructor(texts: any);
+    setTexts(texts: any): void;
+    notFound: string;
+    interpolate(exp: string, vars: any): any;
+    format(value: string, vars?: any): React.ReactNode;
+    translate(key: string, options?: any): React.ReactNode;
+    factory(tag: string): (props: any) => React.ReactElement<any>;
+    p: (props: any) => React.ReactElement<any>;
+    span: (props: any) => React.ReactElement<any>;
+    li: (props: any) => React.ReactElement<any>;
+    div: (props: any) => React.ReactElement<any>;
+    button: (props: any) => React.ReactElement<any>;
+    a: (props: any) => React.ReactElement<any>;
+    text: (props: any) => React.ReactElement<any>;
+}
+declare var singleton: MDText;
+export default singleton;

@@ -11,14 +11,13 @@
     "url": "https://github.com/alexdrel/i18n-react"
   },
   "scripts": {
-    "start": "tsc -p src -d",
+    "start": "tsc -p src -d -watch",
     "prebuild": "tsc -p src -d",
     "build": "webpack -d --config webpack-umd.config.js && webpack -p --config webpack-umd.config.js --output-filename i18n-react.umd.min.js",
-    "watch": "tsc -p src -d -watch",
     "examples": "webpack-dev-server --config webpack-ex.config.js --port 1818 -d",
-    "build-examples": "webpack --config webpack-ex.config.js -d --progress",
-    "wtest": "karma start karma.config.js",
-    "test": "karma start karma.config.js --browsers Firefox --single-run"
+    "build:examples": "webpack --config webpack-ex.config.js -d --progress",
+    "test": "karma start karma.config.js --browsers Firefox --single-run",
+    "wtest": "karma start karma.config.js"
   },
   "keywords": [
     "i18n",

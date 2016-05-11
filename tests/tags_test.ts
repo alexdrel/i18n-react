@@ -2,7 +2,7 @@
 
 import React = require('react');
 import renderElement from './renderElement';
-import * as T from '../src/i18n-react';
+import T from '../src/i18n-react';
 
 describe("i18n-react", () => {
 
@@ -13,7 +13,7 @@ describe("i18n-react", () => {
   it(" renders <T.tags>", () => {
     T.setTexts({ x: "X", y: "Y" });
 
-    expect(formatHTML(T.default, { text:"x" })).toBe("<span>X</span>");
+    expect(formatHTML(T.text, { text:"x" })).toBe("<span>X</span>");
     expect(formatHTML(T.span, { text:"x" })).toBe("<span>X</span>");
     expect(formatHTML(T.p, { text:"x" })).toBe("<p>X</p>");
     expect(formatHTML(T.a, { text:"x", href: "#"})).toBe('<a href="#">X</a>');

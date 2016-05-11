@@ -1,7 +1,7 @@
 /// <reference path="./jasmine.d.ts" />
 /// <reference path="../src/reference.d.ts" />
 
-import T = require('../src/i18n-react');
+import { MDText } from '../src/i18n-react';
 
 describe("i18n-react translate", () => {
   it("with context object", () => {
@@ -20,7 +20,7 @@ describe("i18n-react translate", () => {
          }
        }
     };
-    T.setTexts(texts);
+    let T = new MDText(texts);
 
     expect(T.translate('c', { context: { type: 'star', count: 0 }})).toBe("No stars");
     expect(T.translate('c', { context: { type: 'star', count: 1 }})).toBe("A single star");
@@ -45,7 +45,7 @@ describe("i18n-react translate", () => {
   });
 
   it("finds default in context object", () => {
-     var texts: any = {
+     let T = new MDText({
        c: {
          __: "type.count",
          object: {
@@ -59,8 +59,7 @@ describe("i18n-react translate", () => {
          }
        },
        d: "{context.count} {context.type}(s)"
-    };
-    T.setTexts(texts);
+    });
 
     expect(T.translate('c', { context: { type: 'ufo', count: 0 }})).toBe("No objects");
     expect(T.translate('c', { context: { type: 'ufo', count: 1 }})).toBe("A single object");
@@ -72,7 +71,7 @@ describe("i18n-react translate", () => {
   });
 
   it("supports context array", () => {
-     var texts: any = {
+     let T = new MDText({
        c: {
          A: {
           "0": "a0",
@@ -84,8 +83,7 @@ describe("i18n-react translate", () => {
           _: "bx"
          },
        }
-    };
-    T.setTexts(texts);
+    });
 
     expect(T.translate('c', { context: [ 'A', 0]})).toBe("a0");
     expect(T.translate('c', { context: [ 'A', 1]})).toBe("a1");
@@ -102,7 +100,7 @@ describe("i18n-react translate", () => {
   });
 
   it("range number context", () => {
-     var texts: any = {
+     let T = new MDText({
        c: {
          '0':     'none',
          '1':     'one',
@@ -111,8 +109,7 @@ describe("i18n-react translate", () => {
          "7..9":  'several',
          _:       'many'
        }
-    };
-    T.setTexts(texts);
+    });
 
     expect(T.translate('c', { context: 0})).toBe('none');
     expect(T.translate('c', { context: 1})).toBe('one');

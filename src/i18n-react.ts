@@ -20,18 +20,6 @@ function first(o: any): any {
   }
 }
 
-function isEqualShallow(a: any, b: any) {
-  if(a===b) return true;
-  if(a==null || b==null) return false;
-
-  for(var key in a) {
-    if(!(key in b) || a[key] !== b[key]) return false;
-  }
-  for(var key in b) {
-    if(!(key in a) || a[key] !== b[key]) return false;
-  }
-  return true;
-}
 
 function merge2(head: any, tail: any): any {
   if(head==null) return tail;
@@ -68,52 +56,48 @@ var regexes : {[type:string]: RegExp}= {
   inter: /^(.*?)\{(.*?)\}(.*)$/
 };
 
-function M(value: string, vars?: any): React.ReactNode {
-  if(value==null || value=='')
-    return null;
-
-  if(!value.match(maybeRegex))
-    return value;
-
-  var res: RegExpExecArray = null,
-      type: string = null;
-
-  for(var rtype in regexes) {
-    if( !regexes.hasOwnProperty( rtype ) ) continue;
-
-    var rres = regexes[rtype].exec(value);
-    if(rres) {
-      if(res == null || rres[1].length < res[1].length) {
-        res = rres;
-        type = rtype;
-      }
-    }
+class matcher {
+  constructor(public inter: (exp: string) => any, public self: (exp: string) => any) {
   }
 
-  switch(type) {
-    case null:
+  M(value: string): React.ReactNode {
+    if(value==null || value=='')
+      return null;
+
+    if(!value.match(maybeRegex))
       return value;
-    case "inter":
-      var [vn, flags] = res[2].split(',');
-      var v = _.get(vars, vn);
-      if(v==null) {
-        return merge( M(res[1], vars), null,  M(res[3], vars) );
-      } else if(React.isValidElement(v)) {
-        return merge( M(res[1], vars), React.cloneElement(v, { key: 'r'}), M(res[3], vars) );
-      }
-      var vs : string;
-      if(flags && flags.match(/l/)) {
-        vs = v.toLocaleString();
-      } else {
-        vs = v.toString();
-      }
-      return merge( M(res[1], vars), vs, M(res[3], vars) );
 
-    case "self":
-      return merge( M(res[1], vars), translate(res[2], vars), M(res[3], vars) );
+    var res: RegExpExecArray = null,
+        type: string = null;
 
-    default:
-      return merge( M(res[1], vars), React.createElement(type, { key: type + res[2] }, M(res[2], vars)), M(res[3], vars) );
+    for(var rtype in regexes) {
+      if( !regexes.hasOwnProperty( rtype ) ) continue;
+
+      var rres = regexes[rtype].exec(value);
+      if(rres) {
+        if(res == null || rres[1].length < res[1].length) {
+          res = rres;
+          type = rtype;
+        }
+      }
+    }
+
+    if (!type)
+        return value;
+
+    let middle: any = null;
+    switch(type) {
+      case "inter":
+        middle = this.inter && this.inter(res[2]);
+        break;
+      case "self":
+        middle = this.self && this.self(res[2]);
+        break;
+      default:
+        middle = React.createElement(type, { key: type + res[2] }, this.M(res[2]));
+        break;
+    }
+    return merge( this.M(res[1]), middle, this.M(res[3]) );
   }
 }
 
@@ -168,39 +152,71 @@ function resolveContext(node: any, context: any) : string {
   }
 }
 
-export var format = M;
-
-export var texts: any = null;
-export var setTexts = (t: any) => texts = t;
-
-
-export function translate(key: string, options?: any): React.ReactNode {
-  if(key==null) return null;
-
-  var trans: string | any = _.get(texts, key);
-
-  if(trans!=null && !_.isString(trans)) {
-    trans = resolveContext(trans, options && options.context);
+export class MDText {
+  constructor(public texts: any) {
   }
 
-  if(trans==null) {
-    return key;
+  setTexts(texts: any) {
+    this.texts = texts;
   }
 
-  return M(trans, options);
+  notFound: string;
+
+  interpolate(exp: string, vars: any): any {
+    var [vn, flags] = exp.split(',');
+    var v = _.get(vars, vn);
+    if(v==null) {
+      return null;
+    } else if(React.isValidElement(v)) {
+      return React.cloneElement(v, { key: 'r'});
+    }
+    var vs : string;
+    if(flags && flags.match(/l/)) {
+      vs = v.toLocaleString();
+    } else {
+      vs = v.toString();
+    }
+    return vs;
+  }
+
+  format(value: string, vars?: any): React.ReactNode {
+    return new matcher(
+        (exp:string) => this.interpolate(exp, vars),
+        (exp:string) => this.translate(exp, vars)
+      ).M(value);
+  }
+
+  translate(key: string, options?: any): React.ReactNode {
+    if(key==null) return null;
+
+    var trans: string | any = _.get(this.texts, key);
+
+    if(trans!=null && !_.isString(trans)) {
+      trans = resolveContext(trans, options && options.context);
+    }
+
+    if(trans==null) {
+      return (options && options.notFound !== undefined) ? options.notFound :
+          this.notFound !== undefined ? this.notFound :
+          key;
+    }
+
+    return this.format(trans, options);
+  }
+
+  factory(tag: string) {
+    return (props: any) => React.createElement(tag, props, this.translate(props.text, props));
+  }
+
+  p      = this.factory('p');
+  span   = this.factory('span');
+  li     = this.factory('li');
+  div    = this.factory('div');
+  button = this.factory('button');
+  a      = this.factory('a');
+
+  text = (props: any) => React.createElement(props.tag || 'span', props, this.translate(props.text, props));
 }
 
-export function factory(tag: string) {
-  return (props: any) => React.createElement(tag, props, translate(props.text, props));
-}
-
-export var p      = factory('p');
-export var span   = factory('span');
-export var li     = factory('li');
-export var div    = factory('div');
-export var button = factory('button');
-export var a      = factory('a');
-
-export default function T(props: any) {
-  return React.createElement(props.tag || 'span', props, translate(props.text, props));
-};
+var singleton = new MDText(null);
+export default singleton;
