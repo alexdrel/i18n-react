@@ -57,6 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -258,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.tag = tag;
 	            }
 	            return MDTextTag;
-	        })(MDText);
+	        }(MDText));
 	    };
 	    ;
 	    MDText.setTexts = function (t) { return MDText.texts = t; };
@@ -268,7 +269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    MDText.button = MDText.factory('button');
 	    MDText.a = MDText.factory('a');
 	    return MDText;
-	})(React.Component);
+	}(React.Component));
 	module.exports = MDText;
 
 

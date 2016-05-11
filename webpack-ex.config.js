@@ -9,7 +9,8 @@ module.exports = {
     filename: './examples/[name]/build/index.js'
   },
   externals: {
-    "react": "React"
+    "react": "React",
+    "react-dom": "ReactDOM",
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

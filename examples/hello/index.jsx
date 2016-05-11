@@ -1,3 +1,4 @@
+var ReactDOM = require('react-dom');
 var React = require('react');
 var T = require('i18n-react');
 
@@ -6,7 +7,7 @@ T.setTexts({
   howAreYou:  "_How do you do?_"
 });
 
-React.render(
+ReactDOM.render(
   <T text="greeting" myName="i18n-react"/>,
   document.getElementById('content')
 );

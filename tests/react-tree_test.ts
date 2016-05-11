@@ -1,19 +1,14 @@
-/// <reference path="./jasmine.d.ts" />
-/// <reference path="../src/reference.d.ts" />
+/// <reference path="./reference.d.ts" />
 
 import React = require('react');
+import renderElement from './renderElement';
 import T = require('../src/i18n-react');
 
 describe("i18n-react", () => {
 
   function formatHTML(text: string, o?: any): string {
-    var s =  React.renderToStaticMarkup(React.createElement('super', null, T.format(text, o)));
+    var s =  renderElement(React.createElement('super', null, T.format(text, o)));
     return s.replace(/<\/?super>/g, '');
-  }
-
-  function formatHTML_nospan(text: string, o?: any): string {
-    var s =  React.renderToStaticMarkup(React.createElement('super', null, T.format(text, o)));
-    return s.replace(/<\/?(super|span)>/g, '');
   }
 
   it("format renders tree 1", () => {

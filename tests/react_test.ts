@@ -1,13 +1,13 @@
-/// <reference path="./jasmine.d.ts" />
-/// <reference path="../src/reference.d.ts" />
+/// <reference path="./reference.d.ts" />
 
 import React = require('react');
+import renderElement from './renderElement';
 import T = require('../src/i18n-react');
 
 describe("i18n-react", () => {
 
   function formatHTML(text: string, o?: any): string {
-    var s =  React.renderToStaticMarkup(React.createElement('super', null, T.format(text, o)));
+    var s = renderElement(React.createElement('super', null, T.format(text, o)));
     return s.replace(/<\/?super>/g, '');
   }
 
@@ -24,7 +24,7 @@ describe("i18n-react", () => {
   });
 
   function html(o?: any): string {
-    return  React.renderToStaticMarkup(React.createElement(T, o));
+    return renderElement(React.createElement(T, o));
   }
 
   it("<T> renders <strong>", () => {
@@ -42,10 +42,10 @@ describe("i18n-react", () => {
   });
 
   it("format renders <br>", () => {
-    expect(formatHTML("a\nb")).toBe("a<br>b");
-    expect(formatHTML("a\n  b")).toBe("a<br>b");
-    expect(formatHTML("a \t \n\t b")).toBe("a<br>b");
-    expect(formatHTML("a\n\n\n b")).toBe("a<br><br><br>b");
+    expect(formatHTML("a\nb")).toBe("a<br/>b");
+    expect(formatHTML("a\n  b")).toBe("a<br/>b");
+    expect(formatHTML("a \t \n\t b")).toBe("a<br/>b");
+    expect(formatHTML("a\n\n\n b")).toBe("a<br/><br/><br/>b");
   });
 
   it("format renders <p>", () => {
@@ -83,8 +83,8 @@ describe("i18n-react", () => {
   });
 
   it("format ignores midline #", () => {
-    expect(formatHTML("a#\nText")).toBe("a#<br>Text");
-    expect(formatHTML("ttt##xxx\nText")).toBe("ttt##xxx<br>Text");
+    expect(formatHTML("a#\nText")).toBe("a#<br/>Text");
+    expect(formatHTML("ttt##xxx\nText")).toBe("ttt##xxx<br/>Text");
 
   });
 

@@ -8,7 +8,9 @@ module.exports = function(config) {
 
         files: [
            'tests/PhantomJS_bind-polyfill.js',
-           "https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react-dom.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react-dom-server.js",
             // all files ending in "_test"
             'tests/*_test.*',
             'tests/**/*_test.*'
@@ -40,7 +42,9 @@ module.exports = function(config) {
           },
 
           externals: {
-            "react": "React"
+            "react": "React",
+            "react-dom": "ReactDOM",
+            "react-dom-server": "ReactDOMServer",
           },
 
           module: {

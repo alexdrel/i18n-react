@@ -1,13 +1,13 @@
-/// <reference path="./jasmine.d.ts" />
-/// <reference path="../src/reference.d.ts" />
+/// <reference path="./reference.d.ts" />
 
 import React = require('react');
+import ReactDOMServer = require('react-dom-server');
 import T = require('../src/i18n-react');
 
 describe("i18n-react", () => {
 
   function formatHTML(element: any, o: any): string {
-    return React.renderToStaticMarkup(React.createElement(element, o));
+    return ReactDOMServer.renderToStaticMarkup(React.createElement(element, o));
   }
 
   it(" renders <T.tags>", () => {
