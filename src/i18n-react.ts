@@ -41,6 +41,12 @@ function merge(head: any, middle: any, tail: any): any {
   return  [head, middle,tail];
 }
 
+function cleanupProps(props: any) {
+  var p: any;
+  p = JSON.parse(JSON.stringify(props)); // clone properties
+  delete p['text'];
+}
+
 var maybeRegex = /[\*_\{\[\n]/;
 
 var regexes : {[type:string]: RegExp}= {
@@ -205,7 +211,7 @@ export class MDText {
   }
 
   factory(tag: string) {
-    return (props: any) => React.createElement(tag, null, this.translate(props.text, props));
+    return (props: any) => React.createElement(tag, cleanupProps(props), this.translate(props.text, props));
   }
 
   p      = this.factory('p');
@@ -215,7 +221,7 @@ export class MDText {
   button = this.factory('button');
   a      = this.factory('a');
 
-  text = (props: any) => React.createElement(props.tag || 'span', null, this.translate(props.text, props));
+  text = (props: any) => React.createElement(props.tag || 'span', cleanupProps(props), this.translate(props.text, props));
 }
 
 var singleton = new MDText(null);

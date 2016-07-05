@@ -98,6 +98,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return head + middle + tail;
 	    return [head, middle, tail];
 	}
+	function cleanupProps(props) {
+	    var p;
+	    p = JSON.parse(JSON.stringify(props));
+	    delete p['text'];
+	}
 	var maybeRegex = /[\*_\{\[\n]/;
 	var regexes = {
 	    strong: /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
@@ -211,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.div = this.factory('div');
 	        this.button = this.factory('button');
 	        this.a = this.factory('a');
-	        this.text = function (props) { return React.createElement(props.tag || 'span', null, _this.translate(props.text, props)); };
+	        this.text = function (props) { return React.createElement(props.tag || 'span', cleanupProps(props), _this.translate(props.text, props)); };
 	    }
 	    MDText.prototype.setTexts = function (texts) {
 	        this.texts = texts;
@@ -254,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    MDText.prototype.factory = function (tag) {
 	        var _this = this;
-	        return function (props) { return React.createElement(tag, null, _this.translate(props.text, props)); };
+	        return function (props) { return React.createElement(tag, cleanupProps(props), _this.translate(props.text, props)); };
 	    };
 	    return MDText;
 	}());
