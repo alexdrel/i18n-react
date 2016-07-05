@@ -205,7 +205,7 @@ export class MDText {
   }
 
   factory(tag: string) {
-    return (props: any) => React.createElement(tag, props, this.translate(props.text, props));
+    return (props: any) => React.createElement(tag, null, this.translate(props.text, props));
   }
 
   p      = this.factory('p');
@@ -215,7 +215,7 @@ export class MDText {
   button = this.factory('button');
   a      = this.factory('a');
 
-  text = (props: any) => React.createElement(props.tag || 'span', props, this.translate(props.text, props));
+  text = (props: any) => React.createElement(props.tag || 'span', null, this.translate(props.text, props));
 }
 
 var singleton = new MDText(null);

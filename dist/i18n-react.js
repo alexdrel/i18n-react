@@ -152,7 +152,7 @@ var MDText = (function () {
         this.div = this.factory('div');
         this.button = this.factory('button');
         this.a = this.factory('a');
-        this.text = function (props) { return React.createElement(props.tag || 'span', props, _this.translate(props.text, props)); };
+        this.text = function (props) { return React.createElement(props.tag || 'span', null, _this.translate(props.text, props)); };
     }
     MDText.prototype.setTexts = function (texts) {
         this.texts = texts;
@@ -195,7 +195,7 @@ var MDText = (function () {
     };
     MDText.prototype.factory = function (tag) {
         var _this = this;
-        return function (props) { return React.createElement(tag, props, _this.translate(props.text, props)); };
+        return function (props) { return React.createElement(tag, null, _this.translate(props.text, props)); };
     };
     return MDText;
 }());
