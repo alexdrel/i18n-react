@@ -99,9 +99,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return [head, middle, tail];
 	}
 	function cleanupProps(props) {
-	    var p;
-	    p = JSON.parse(JSON.stringify(props));
+	    var p = JSON.parse(JSON.stringify(props));
 	    delete p['text'];
+	    return p;
 	}
 	var maybeRegex = /[\*_\{\[\n]/;
 	var regexes = {

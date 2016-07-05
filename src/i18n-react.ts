@@ -42,9 +42,9 @@ function merge(head: any, middle: any, tail: any): any {
 }
 
 function cleanupProps(props: any) {
-  var p: any;
-  p = JSON.parse(JSON.stringify(props)); // clone properties
+  var p = JSON.parse(JSON.stringify(props)); // clone properties
   delete p['text'];
+  return p;
 }
 
 var maybeRegex = /[\*_\{\[\n]/;
