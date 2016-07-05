@@ -39,6 +39,11 @@ function merge(head, middle, tail) {
         return head + middle + tail;
     return [head, middle, tail];
 }
+function cleanupProps(props) {
+    var p = JSON.parse(JSON.stringify(props));
+    delete p['text'];
+    return p;
+}
 var maybeRegex = /[\*_\{\[\n]/;
 var regexes = {
     strong: /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
@@ -152,7 +157,7 @@ var MDText = (function () {
         this.div = this.factory('div');
         this.button = this.factory('button');
         this.a = this.factory('a');
-        this.text = function (props) { return React.createElement(props.tag || 'span', props, _this.translate(props.text, props)); };
+        this.text = function (props) { return React.createElement(props.tag || 'span', cleanupProps(props), _this.translate(props.text, props)); };
     }
     MDText.prototype.setTexts = function (texts) {
         this.texts = texts;
@@ -195,7 +200,7 @@ var MDText = (function () {
     };
     MDText.prototype.factory = function (tag) {
         var _this = this;
-        return function (props) { return React.createElement(tag, props, _this.translate(props.text, props)); };
+        return function (props) { return React.createElement(tag, cleanupProps(props), _this.translate(props.text, props)); };
     };
     return MDText;
 }());
