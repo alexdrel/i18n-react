@@ -1,8 +1,9 @@
 {
   "name": "i18n-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
+  "typings": "dist/i18n-react.ext.d.ts",
   "typescript": {
     "definition": "dist/i18n-react.ext.d.ts"
   },
@@ -17,7 +18,7 @@
     "examples": "webpack-dev-server --config webpack-ex.config.js --port 1818 -d",
     "build:examples": "webpack --config webpack-ex.config.js -d --progress",
     "test": "karma start karma.config.js --browsers Firefox --single-run",
-    "wtest": "karma start karma.config.js"
+    "test:watch": "karma start karma.config.js"
   },
   "keywords": [
     "i18n",
@@ -29,6 +30,8 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/jasmine": "^2.2.26-alpha",
+    "@types/react": "^0.14.25-alpha",
     "jasmine-core": "^2.4.1",
     "json-loader": "^0.5.4",
     "jsx-loader": "^0.13.2",
@@ -40,7 +43,7 @@
     "karma-webpack": "^1.7.0",
     "node-libs-browser": "^1.0.0",
     "ts-loader": "^0.8.2",
-    "typescript": "^1.8.10",
+    "typescript": "^2.0.0-dev.20160706",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1",
     "yaml-loader": "^0.1.0"

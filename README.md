@@ -16,7 +16,7 @@ T.setTexts({
 });
 
 React.render(
-  <T.span text="greeting" myName="i18n-react"/>,
+  <T.span text={{ key: "greeting", myName: "i18n-react" }}/>,
   document.getElementById('content')
 );
 ```
@@ -73,25 +73,25 @@ var T = window['i18n-react'].default;
 
 Initialize once - probably in an application entry point js:
 ```js
-T.setTexts(require('../texts/texts-en.yml'));
-/* or */
 T.setTexts({
   greeting: "Hello, World! My name is *{myName}*! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
 });
+/* or if there is yaml/json loader */
+T.setTexts(require('../texts/texts-en.yml'));
 ```
 
 Use it anywhere:
 ```xml
- <T.span text="path.to.string" context="context-if-any" var1="string" var2={int} var3={ReactElement}/>
- <T.p text="path.to.string" var1="string" var2={int} anyValidHtmlAttribute="p.will.have.it"/>
  <T.a text="path.to.string" href="a's href"/>
- <T.text tag='h1' text="path.to.string" varInt={1} varReact={<span className="c">X</span>}/>
- <h1>{T.translate("path.to.string", { context: "context", var1: 2})}</h1>
+ <T.text tag='h1' text="path.to.string" context: "context-if-any"/>
+ <T.p text={{ key: "path.to.string", var1: "string", var2: 2}} anyValidHtmlAttribute="p.will.have.it"/>
+ <T.span text={{ key: "path.to.string", context: "context-if-any", var1: "string", var2: 2, var3: <span className="c">X</span>}}/>
+ <h1>{T.translate("path.to.string", { context: "context", val: 1})}</h1>
 ```
 
 ### Creating new MDText object
-In case you want to control lifecycle of the dictionary object (instead of default signgleton)
+In case you want to control lifecycle of the dictionary object (instead of default singleton)
 it can be created with MDText constructor.
 ```js
 import { MDText } from 'i18n-react';
@@ -101,7 +101,7 @@ let x = T.translate("path.to.string");
 ```
 
 ### Difference between Keys and Context
-Text attribute is a key that should point to string or JSON object, it has to be present in the langauge resource.
+Text attribute is a key that should point to string or JSON object, it has to be present in the language resource.
 Then if needed the context is used to disambiguate betwen multiple texts according to the following rules:
 1. Exact match for the context value.
 1. For numeric context values - key with range, e.g. 2..4 that matches context value.
@@ -114,9 +114,25 @@ to help you find the missing translation.
 This behaviour can be augmented by providing notFound property in the options or MDText object.
 
 ### Unit tests are half-loaf documentation
-You are welcomed to consult unit tests for usage details and examples.
+You are welcomed to consult examples folder and unit tests for usage details and examples.
 
 ## Breaking changes
+### 0.3
+##### Unknown Prop Warning
+React 15.2 is preparing to stop filtering HTML properties (https://fb.me/react-unknown-prop) - the feature that i18n relied upon for
+preventing interpolation variables from leaking into the DOM.
+
+Thus new syntax for passing variables is introduced:
+```xml
+<T.span text={{ key: "greeting", myName: "i18n-react" }}/>
+/* replaces */
+<T.span text="greeting" myName="i18n-react"/>
+```
+All tags passing to T.* anything beside ```text```, ```tag``` and ```context``` properties have to be updated or React 15.2 will cry annoyingly.
+
+##### typescript 2.0 / ts@next typings
+Updated package.json contains all the info for the new typescript to get typings automatically.
+
 ### 0.2
 * ES6 style export (use default export explicitly for commonJS/UMD)
 * Stateless react components (shouldComponentUpdate optimization removed)
@@ -129,5 +145,5 @@ You are welcomed to consult unit tests for usage details and examples.
 * Start dev server for examples: ```$ npm run examples``` (http://localhost:1818/webpack-dev-server/examples/)
 * Build examples: ```$ npm run build:examples```
 * Run tests (Firefox): ```$ npm test```
-* Watch tests (Chrome): ```$ npm run wtest```
+* Watch tests (Chrome): ```$ npm run test:watch```
 

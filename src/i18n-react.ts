@@ -14,6 +14,16 @@ var _ = {
   }
 };
 
+function Object_rest(obj: any, keys: string[]): any {
+    var target: any = {};
+    for (var i in obj) {
+        if (keys.indexOf(i) >= 0) continue;
+        if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+        target[i] = obj[i];
+    }
+    return target;
+};
+
 function first(o: any): any {
   for (var k in o) {
     if(k!='__') return o[k];
@@ -205,7 +215,28 @@ export class MDText {
   }
 
   factory(tag: string) {
-    return (props: any) => React.createElement(tag, props, this.translate(props.text, props));
+    return (props: any) => {
+      let { text } = props;
+
+      let key: string;
+      let options: any;
+      let omitProps = ['text', 'tag'];
+
+      if(text == null || _.isString(text)) {
+        key = text;
+        options = props;
+        omitProps = ['text', 'context', 'tag', 'notFound'];
+      } else {
+        key = text.key;
+        options = text;
+      }
+
+      return React.createElement(
+            tag || options.tag || props.tag || 'span',
+            Object_rest(props, omitProps),
+            this.translate(key, options)
+          );
+    }
   }
 
   p      = this.factory('p');
@@ -215,7 +246,7 @@ export class MDText {
   button = this.factory('button');
   a      = this.factory('a');
 
-  text = (props: any) => React.createElement(props.tag || 'span', props, this.translate(props.text, props));
+  text = this.factory(null);
 }
 
 var singleton = new MDText(null);

@@ -1,5 +1,3 @@
-/// <reference path="./reference.d.ts" />
-
 import React = require('react');
 import renderElement from './renderElement';
 import T from '../src/i18n-react';

@@ -72,6 +72,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return obj;
 	    }
 	};
+	function Object_rest(obj, keys) {
+	    var target = {};
+	    for (var i in obj) {
+	        if (keys.indexOf(i) >= 0)
+	            continue;
+	        if (!Object.prototype.hasOwnProperty.call(obj, i))
+	            continue;
+	        target[i] = obj[i];
+	    }
+	    return target;
+	}
+	;
 	function first(o) {
 	    for (var k in o) {
 	        if (k != '__')
@@ -203,7 +215,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	var MDText = (function () {
 	    function MDText(texts) {
-	        var _this = this;
 	        this.texts = texts;
 	        this.p = this.factory('p');
 	        this.span = this.factory('span');
@@ -211,7 +222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.div = this.factory('div');
 	        this.button = this.factory('button');
 	        this.a = this.factory('a');
-	        this.text = function (props) { return React.createElement(props.tag || 'span', props, _this.translate(props.text, props)); };
+	        this.text = this.factory(null);
 	    }
 	    MDText.prototype.setTexts = function (texts) {
 	        this.texts = texts;
@@ -254,7 +265,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    MDText.prototype.factory = function (tag) {
 	        var _this = this;
-	        return function (props) { return React.createElement(tag, props, _this.translate(props.text, props)); };
+	        return function (props) {
+	            var text = props.text;
+	            var key;
+	            var options;
+	            var omitProps = ['text', 'tag'];
+	            if (text == null || _.isString(text)) {
+	                key = text;
+	                options = props;
+	                omitProps = ['text', 'context', 'tag', 'notFound'];
+	            }
+	            else {
+	                key = text.key;
+	                options = text;
+	            }
+	            return React.createElement(tag || options.tag || props.tag || 'span', Object_rest(props, omitProps), _this.translate(key, options));
+	        };
 	    };
 	    return MDText;
 	}());

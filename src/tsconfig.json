@@ -6,9 +6,5 @@
         "preserveConstEnums": true,
         "outDir": "../dist/",
         "declaration": false
-    },
-    "files": [
-        "i18n-react.ts",
-        "reference.d.ts"
-    ]
+    }
 }

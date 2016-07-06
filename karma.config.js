@@ -8,9 +8,9 @@ module.exports = function(config) {
 
         files: [
            'tests/PhantomJS_bind-polyfill.js',
-           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react.js",
-           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react-dom.js",
-           "https://cdnjs.cloudflare.com/ajax/libs/react/0.14.8/react-dom-server.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom.js",
+           "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom-server.js",
             // all files ending in "_test"
             'tests/*_test.*',
             'tests/**/*_test.*'
@@ -38,7 +38,7 @@ module.exports = function(config) {
           devtool: 'inline-source-map',
 
           resolve: {
-                extensions: ['', '.js', '.jsx', '.ts']
+                extensions: ['', '.js', '.jsx', '.ts', '.tsx']
           },
 
           externals: {

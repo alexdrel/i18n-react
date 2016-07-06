@@ -1,5 +1,3 @@
-/// <reference path="./reference.d.ts" />
-
 import React = require('react');
 import renderElement from './renderElement';
 import T from '../src/i18n-react';
@@ -93,7 +91,7 @@ describe("i18n-react", () => {
     expect(html({ text: "a", tag: 'p', 'data-x': 'x'})).toBe("<p data-x=\"x\">a</p>");
     expect(html({ text: "a", tag: 'a', href: '#'})).toBe("<a href=\"#\">a</a>");
 
-    expect(html({ text: "b", val: 'B', className: "cl"})).toBe("<span class=\"cl\">B</span>");
+    expect(html({ text: { key: "b", val: 'B' }, className: "cl"})).toBe("<span class=\"cl\">B</span>");
   });
 
   it("format renders React variables", () => {

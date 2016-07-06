@@ -1,6 +1,3 @@
-/// <reference path="./jasmine.d.ts" />
-/// <reference path="../src/reference.d.ts" />
-
 import { MDText } from '../src/i18n-react';
 
 describe("i18n-react translate", () => {
