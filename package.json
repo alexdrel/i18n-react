@@ -28,6 +28,10 @@
   ],
   "author": "Alex Drel",
   "license": "MIT",
+  "engines": {
+    "node": "0.12.x || 4.x.x",
+    "npm": "2.x.x"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "^2.2.26-alpha",
@@ -35,7 +39,7 @@
     "jasmine-core": "^2.4.1",
     "json-loader": "^0.5.4",
     "jsx-loader": "^0.13.2",
-    "karma": "^0.13.22",
+    "karma": "^1.1.1",
     "karma-chrome-launcher": "^1.0.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
@@ -44,8 +48,8 @@
     "node-libs-browser": "^1.0.0",
     "ts-loader": "^0.8.2",
     "typescript": "^2.0.0-dev.20160706",
-    "webpack": "^1.13.0",
+    "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
-    "yaml-loader": "^0.1.0"
+    "yaml-loader": "^0.2.0"
   }
 }
