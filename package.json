@@ -1,9 +1,8 @@
 {
   "name": "i18n-react",
-  "version": "0.3.0",
+  "version": "0.3.0-ts1",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
-  "typings": "dist/i18n-react.ext.d.ts",
   "typescript": {
     "definition": "dist/i18n-react.ext.d.ts"
   },
