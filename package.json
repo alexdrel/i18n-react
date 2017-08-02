@@ -1,12 +1,9 @@
 {
   "name": "i18n-react",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
-  "typings": "dist/i18n-react.ext.d.ts",
-  "typescript": {
-    "definition": "dist/i18n-react.ext.d.ts"
-  },
+  "typings": "dist/i18n-react.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/alexdrel/i18n-react"
@@ -14,7 +11,7 @@
   "scripts": {
     "start": "tsc -p src -d -watch",
     "prebuild": "tsc -p src -d",
-    "build": "webpack -d --config webpack-umd.config.js && webpack -p --config webpack-umd.config.js --output-filename i18n-react.umd.min.js",
+    "build": "webpack --config webpack-umd.config.js && webpack -p --config webpack-umd.config.js --output-filename i18n-react.umd.min.js",
     "examples": "webpack-dev-server --config webpack-ex.config.js --port 1818 -d",
     "build:examples": "webpack --config webpack-ex.config.js -d --progress",
     "test": "karma start karma.config.js --browsers Firefox --single-run",
@@ -29,27 +26,28 @@
   "author": "Alex Drel",
   "license": "MIT",
   "engines": {
-    "node": "0.12.x || 4.x.x",
-    "npm": "2.x.x"
+    "node": "4.x.x || 6.x.x",
+    "npm": "5.x.x"
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/jasmine": "^2.2.26-alpha",
-    "@types/react": "^0.14.25-alpha",
-    "jasmine-core": "^2.4.1",
-    "json-loader": "^0.5.4",
+    "@types/jasmine": "^2.5.53",
+    "@types/react": "^15.6.0",
+    "@types/react-dom": "^15.5.1",
+    "jasmine-core": "^2.6.4",
+    "json-loader": "^0.5.7",
     "jsx-loader": "^0.13.2",
-    "karma": "^1.1.1",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-firefox-launcher": "^1.0.0",
-    "karma-jasmine": "^1.0.2",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^1.7.0",
-    "node-libs-browser": "^1.0.0",
-    "ts-loader": "^0.8.2",
-    "typescript": "^2.0.0-dev.20160706",
-    "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1",
-    "yaml-loader": "^0.2.0"
+    "karma-webpack": "^2.0.4",
+    "node-libs-browser": "^2.0.0",
+    "ts-loader": "^2.3.2",
+    "typescript": "^2.4.2",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1",
+    "yaml-loader": "^0.5.0"
   }
 }

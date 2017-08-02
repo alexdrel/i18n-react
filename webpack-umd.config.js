@@ -5,7 +5,7 @@ module.exports = {
     "i18n-react": "./src/i18n-react.ts",
   },
   output: {
-    path: './dist/',
+    path: __dirname + '/dist/',
     filename: 'i18n-react.umd.js',
     library: 'i18n-react',
     libraryTarget: "umd"
@@ -14,13 +14,12 @@ module.exports = {
     "react": "React"
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.ts'],
+    extensions: ['.js', '.jsx', '.ts'],
   },
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: 'ts' }
+      { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
-  progress: true,
-  devtool: "sourcemap"
-}
+  devtool: "source-map",
+};

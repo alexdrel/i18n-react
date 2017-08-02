@@ -3,6 +3,7 @@
 i18n-react
 ===
 React (JS) text internationalization and externalizing.
+Markdown-ish syntax with variables support (including of react element type).
 
 ### Quick example
 
@@ -11,7 +12,7 @@ var React = require('react');
 var T = require('i18n-react');
 
 T.setTexts({
-  greeting: "###Hello, World!\n My name is *{myName}*! \n {{howAreYou}}",
+  greeting: "### Hello, World!\n My name is **{myName}**! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
 });
 
@@ -76,7 +77,7 @@ Initialize once - probably in an application entry point js:
 T.setTexts({
   greeting: "Hello, World! My name is *{myName}*! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
-});
+}, { MDFlavor: 0 });
 /* or if there is yaml/json loader */
 T.setTexts(require('../texts/texts-en.yml'));
 ```
@@ -111,12 +112,46 @@ Then if needed the context is used to disambiguate betwen multiple texts accordi
 ### Missing translations
 By default if translation for the specified key is not present the key itself is returned
 to help you find the missing translation.
-This behaviour can be augmented by providing notFound property in the options or MDText object.
+This behaviour can be augmented by passing custom ``notFound`` value to setText options or MDText contructor.
+
+### Markdown syntax
+
+ + ``*italic*`` *italic*  - ``<em>`` **breaking change V1, ``<strong>`` in V0**
+ + ``_italic_`` _italic_  - ``<i>`` **breaking change V1, ``<em>`` in V0**
+ + ``**bold**`` **bold** ``<strong>`` *new - V1*
+ + ``__bold__`` __bold__ ``<b>`` *new - V1*
+ + ``~underlined~`` <u>underlined</u> ``<u>`` *new - V1*
+ + ``~~strike~~`` ~~strike~~  ``<strike>`` *new - V1*
+ + ``\n`` New Line ``<br>``
+ + ``[Paragraph 1][Paragraph 2]`` Multiple paragraphs ``<p>``
+ + ``#``-``####`` Headers ``<h1>-<h4>``
 
 ### Unit tests are half-loaf documentation
 You are welcomed to consult examples folder and unit tests for usage details and examples.
 
 ## Breaking changes
+### 0.4
+##### New MD syntax
+The new MD flavor (aligned with github's Markdown) is added : V1. Opt-in for this release, will become default in the next major release.
+V1 introduces strike and underline, and rehabilitates ``<b>`` and ``<i>`` tags.
+
+```yaml
+  em: "an *italic* style"
+  i: "an _italic_ style"
+  strong: "a **bold** move"
+  b: "a __bold__ move"
+  u: "an ~underlined~ word"
+  strike: "a ~~strike~~ out"
+```
+To opt-in for the new syntax:
+```js
+let T = new MDText(texts, { MDFlavor: 1 });
+// or for the singelton
+T.setTexts(require('../texts/texts-en.yml'), { MDFlavor: 1, notFound: 'NA' });
+```
+#### notFound Deprecation
+MDText notFound property is deprecated - please switch to constructor or serTexts options.
+
 ### 0.3
 ##### Unknown Prop Warning
 React 15.2 is preparing to stop filtering HTML properties (https://fb.me/react-unknown-prop) - the feature that i18n relied upon for

@@ -1,160 +1,122 @@
-// <reference path="./reference.d.ts" />
-import React = require('react');
+import * as React from 'react';
+import { mdFlavors, MDFlavor, mdMatch } from './mdflavors';
 
-var _ = {
-  isString: (s:any) => typeof s === 'string' || s instanceof String,
-  isObject: (o:any) => typeof o === 'object',
-  get: (obj: any, path: string): any  => {
-    var spath = path.split('.');
-    for(var i = 0, len = spath.length; i < len; i++) {
-      if(!obj || typeof obj !== 'object') return undefined;
-      obj = obj[spath[i]];
-    }
-    return obj;
+function isString(s: any): s is string {
+  return typeof s === 'string' || s instanceof String;
+}
+
+function isObject(o: any) {
+  return typeof o === 'object';
+}
+
+function get(obj: any, path: string): any {
+  var spath = path.split('.');
+  for (var i = 0, len = spath.length; i < len; i++) {
+    if (!obj || !isObject(obj)) return undefined;
+    obj = obj[spath[i]];
   }
-};
-
-function Object_rest(obj: any, keys: string[]): any {
-    var target: any = {};
-    for (var i in obj) {
-        if (keys.indexOf(i) >= 0) continue;
-        if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-        target[i] = obj[i];
-    }
-    return target;
-};
+  return obj;
+}
 
 function first(o: any): any {
   for (var k in o) {
-    if(k!='__') return o[k];
+    if (k != '__') return o[k];
   }
 }
 
+function flatten(l: (string | any)[]) {
+  let r: any[] = [];
+  let s = '';
+  let flush = () => s && (r.push(s), s = '');
 
-function merge2(head: any, tail: any): any {
-  if(head==null) return tail;
-  if(tail==null) return head;
-
-  if(_.isString(head) && _.isString(tail))
-    return head+tail;
-  return [head, tail];
- }
-
-function merge(head: any, middle: any, tail: any): any {
-  if(head==null) return merge2(middle, tail);
-  if(middle==null) return merge2(head, tail);
-  if(tail==null) return merge2(head, middle);
-
-  if(_.isString(head) && _.isString(middle) && _.isString(tail))
-    return head+middle+tail;
-
-  return  [head, middle,tail];
+  for (let i of l) {
+    if (i == null) continue;
+    if (isString(i)) {
+      s += i;
+    } else {
+      flush();
+      r.push(i);
+    }
+  }
+  flush();
+  return r.length > 1 ? r : (r.length ? r[0] : null);
 }
 
-var maybeRegex = /[\*_\{\[\n]/;
-
-var regexes : {[type:string]: RegExp}= {
-  strong: /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
-  em: /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
-  p: /^(.*?)\[(.*?)\](.*)$/,
-  h1: /^(|.*?(?=\n))\n*\s*#([^#].*?)#*\s*\n+([\S\s]*)$/,
-  h2: /^(|.*?(?=\n))\n*\s*##([^#].*?)#*\s*\n+([\S\s]*)$/,
-  h3: /^(|.*?(?=\n))\n*\s*###([^#].*?)#*\s*\n+([\S\s]*)$/,
-  h4: /^(|.*?(?=\n))\n*\s*####([^#].*?)#*\s*\n+([\S\s]*)$/,
-  br: /^(.*?)[^\S\n]*\n()[^\S\n]*([\s\S]*)$/,
-  self: /^(.*?)\{\{(.*?)\}\}(.*)$/,
-  inter: /^(.*?)\{(.*?)\}(.*)$/
-};
-
 class matcher {
-  constructor(public inter: (exp: string) => any, public self: (exp: string) => any) {
+  constructor(
+    public mdFlavor: MDFlavor,
+    public inter: (exp: string) => any,
+    public self: (exp: string) => any) {
   }
 
   M(value: string): React.ReactNode {
-    if(value==null || value=='')
+    if (value == null || value == '')
       return null;
 
-    if(!value.match(maybeRegex))
+    const m = mdMatch(this.mdFlavor, value);
+    if (!m)
       return value;
 
-    var res: RegExpExecArray = null,
-        type: string = null;
-
-    for(var rtype in regexes) {
-      if( !regexes.hasOwnProperty( rtype ) ) continue;
-
-      var rres = regexes[rtype].exec(value);
-      if(rres) {
-        if(res == null || rres[1].length < res[1].length) {
-          res = rres;
-          type = rtype;
-        }
-      }
-    }
-
-    if (!type)
-        return value;
-
     let middle: any = null;
-    switch(type) {
+    switch (m.tag) {
       case "inter":
-        middle = this.inter && this.inter(res[2]);
+        middle = this.inter && this.inter(m.body);
         break;
       case "self":
-        middle = this.self && this.self(res[2]);
+        middle = this.self && this.self(m.body);
         break;
       default:
-        middle = React.createElement(type, { key: type + res[2] }, this.M(res[2]));
+        middle = React.createElement(m.tag, { key: m.tag + m.body }, this.M(m.body));
         break;
     }
-    return merge( this.M(res[1]), middle, this.M(res[3]) );
+    return flatten([this.M(m.head), middle, this.M(m.tail)]);
   }
 }
 
 function rangeHit(node: any, val: number) {
-  for(var t in node) {
-    if( !node.hasOwnProperty( t ) ) continue;
+  for (let t in node) {
+    if (!node.hasOwnProperty(t)) continue;
     var range = t.match(/^(-?\d+)\.\.(-?\d+)$/);
-    if(range && (+range[1] <= val && val <= +range[2])) {
+    if (range && (+range[1] <= val && val <= +range[2])) {
       return node[t];
     }
   }
 }
 
-function resolveContextPath(node: any, p: number, path: string[], context: any) : string {
-  var key = path[p];
-  var trans: any;
+function resolveContextPath(node: any, p: number, path: string[], context: any): string {
+  const key = path[p];
+  let trans: any;
 
-  if(key!=null && context[key]!=null) {
-    trans = _.get(node, context[key].toString());
-    if(trans==null && (+context[key])===context[key]) {
+  if (key != null && context[key] != null) {
+    trans = get(node, context[key].toString());
+    if (trans == null && (+context[key]) === context[key]) {
       trans = rangeHit(node, +context[key]);
     }
   }
 
-  if(trans==null)
+  if (trans == null)
     trans = node._;
-  if(trans==null)
+  if (trans == null)
     trans = first(node);
 
-  if(trans!=null && !_.isString(trans)) {
-    return resolveContextPath(trans, p+1, path, context);
+  if (trans != null && !isString(trans)) {
+    return resolveContextPath(trans, p + 1, path, context);
   }
   return trans;
 }
 
-function resolveContext(node: any, context: any) : string {
-  if(context==null) {
+function resolveContext(node: any, context: any): string {
+  if (context == null) {
     return resolveContextPath(node, 0, [], null);
-  } else if(!_.isObject(context)) {
+  } else if (!isObject(context)) {
     return resolveContextPath(node, 0, ['_'], { _: context });
   } else {
-    var ctx_keys : string[] = [];
-    if(node.__) {
+    let ctx_keys: string[] = [];
+    if (node.__) {
       ctx_keys = node.__.split('.');
     } else {
-      for(var k in context) {
-        if( !context.hasOwnProperty( k ) ) continue;
+      for (var k in context) {
+        if (!context.hasOwnProperty(k)) continue;
         ctx_keys.push(k);
       }
     }
@@ -162,26 +124,41 @@ function resolveContext(node: any, context: any) : string {
   }
 }
 
+export interface MDTextOpts {
+  MDFlavor?: 0 | 1;
+  notFound?: string;
+}
+
 export class MDText {
-  constructor(public texts: any) {
+  constructor(public texts: object, opt?: MDTextOpts) {
+    this.setOpts(opt);
   }
 
-  setTexts(texts: any) {
+  setTexts(texts: object, opt?: MDTextOpts) {
     this.texts = texts;
+    this.setOpts(opt);
   }
 
-  notFound: string;
+  setOpts(opt: MDTextOpts) {
+    if (!opt) return;
+    if (opt.notFound != undefined) this.notFound = opt.notFound;
+    if (opt.MDFlavor !== undefined) this.MDFlavor = opt.MDFlavor;
+  }
 
-  interpolate(exp: string, vars: any): any {
-    var [vn, flags] = exp.split(',');
-    var v = _.get(vars, vn);
-    if(v==null) {
+  private MDFlavor: 0 | 1 = 0;
+  // public access is deprecated
+  public notFound: string = undefined;
+
+  interpolate(exp: string, vars: object): any {
+    const [vn, flags] = exp.split(',');
+    const v = get(vars, vn);
+    if (v == null) {
       return null;
-    } else if(React.isValidElement(v)) {
-      return React.cloneElement(v, { key: 'r'});
+    } else if (React.isValidElement<{ key: string }>(v)) {
+      return React.cloneElement(v, { key: 'r' });
     }
-    var vs : string;
-    if(flags && flags.match(/l/)) {
+    let vs: string;
+    if (flags && flags.match(/l/)) {
       vs = v.toLocaleString();
     } else {
       vs = v.toString();
@@ -189,62 +166,65 @@ export class MDText {
     return vs;
   }
 
-  format(value: string, vars?: any): React.ReactNode {
+  format(value: string, vars?: object): React.ReactNode {
     return new matcher(
-        (exp:string) => this.interpolate(exp, vars),
-        (exp:string) => this.translate(exp, vars)
-      ).M(value);
+      mdFlavors[this.MDFlavor],
+      (exp: string) => this.interpolate(exp, vars),
+      (exp: string) => this.translate(exp, vars)
+    ).M(value);
   }
 
   translate(key: string, options?: any): React.ReactNode {
-    if(key==null) return null;
+    if (key == null) return null;
 
-    var trans: string | any = _.get(this.texts, key);
+    var trans: string | any = get(this.texts, key);
 
-    if(trans!=null && !_.isString(trans)) {
+    if (trans != null && !isString(trans)) {
       trans = resolveContext(trans, options && options.context);
     }
 
-    if(trans==null) {
+    if (trans == null) {
       return (options && options.notFound !== undefined) ? options.notFound :
-          this.notFound !== undefined ? this.notFound :
+        this.notFound !== undefined ? this.notFound :
           key;
     }
 
     return this.format(trans, options);
   }
 
-  factory(tag: string) {
-    return (props: any) => {
-      let { text } = props;
+  factory(tagF: string) {
+    // name High Order Function for React Dev tools
+    let MDText = (props: any) => {
+      let { text, tag, ...restProps } = props;
 
       let key: string;
       let options: any;
-      let omitProps = ['text', 'tag'];
 
-      if(text == null || _.isString(text)) {
+      if (text == null || isString(text)) {
         key = text;
         options = props;
-        omitProps = ['text', 'context', 'tag', 'notFound'];
+        let { notFound, context, ...rest2Props } = restProps;
+        restProps = rest2Props;
       } else {
         key = text.key;
         options = text;
       }
 
       return React.createElement(
-            tag || options.tag || props.tag || 'span',
-            Object_rest(props, omitProps),
-            this.translate(key, options)
-          );
-    }
+        tagF || tag || 'span',
+        restProps,
+        this.translate(key, options)
+      );
+    };
+    return MDText;
   }
 
-  p      = this.factory('p');
-  span   = this.factory('span');
-  li     = this.factory('li');
-  div    = this.factory('div');
+  p = this.factory('p');
+  span = this.factory('span');
+  li = this.factory('li');
+  div = this.factory('div');
   button = this.factory('button');
-  a      = this.factory('a');
+  a = this.factory('a');
 
   text = this.factory(null);
 }

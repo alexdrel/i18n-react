@@ -3,6 +3,7 @@ var webpack = require("webpack");
 module.exports = {
   entry: {
     hello: './examples/hello/index.jsx',
+    syntaxV1: './examples/syntaxV1/index.tsx',
     yaml: './examples/yaml/index.jsx'
   },
   output: {
@@ -13,13 +14,14 @@ module.exports = {
     "react-dom": "ReactDOM",
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
-    modulesDirectories: [ '.', 'node_modules' ],
+    extensions: ['.js', '.jsx'],
+    modules: [ '.', 'node_modules' ],
   },
   module: {
     loaders: [
-      { test: /\.jsx$/, loader: 'jsx?harmony' },
-      { test: /\.ya?ml$/, loader: 'json!yaml' }
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+      { test: /\.jsx$/, loader: 'jsx-loader?harmony' },
+      { test: /\.ya?ml$/, loader: 'json-loader!yaml-loader' }
     ]
   },
   devtool: "eval",
@@ -27,4 +29,4 @@ module.exports = {
     noInfo: false,
     stats: true
   }
-}
+};
