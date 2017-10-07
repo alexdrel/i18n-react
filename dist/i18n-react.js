@@ -71,6 +71,9 @@ var matcher = /** @class */ (function () {
             case "self":
                 middle = this.self && this.self(m.body);
                 break;
+            case "literal":
+                middle = m.body;
+                break;
             default:
                 middle = React.createElement(m.tag, { key: m.tag + m.body }, this.M(m.body));
                 break;

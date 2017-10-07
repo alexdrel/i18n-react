@@ -151,6 +151,9 @@ var matcher = /** @class */ (function () {
             case "self":
                 middle = this.self && this.self(m.body);
                 break;
+            case "literal":
+                middle = m.body;
+                break;
             default:
                 middle = React.createElement(m.tag, { key: m.tag + m.body }, this.M(m.body));
                 break;
@@ -318,6 +321,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 exports.__esModule = true;
 var R = {
+    "``": /^(.*?)``(.*?)``(.*)$/,
     "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
     "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
     "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
@@ -352,6 +356,7 @@ exports.mdFlavors = [
     {
         maybe: /[\*_~\{\[\n]/,
         tags: {
+            literal: R["``"],
             strong: R["**"],
             em: R["*"],
             b: R["__"],

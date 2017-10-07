@@ -125,11 +125,16 @@ This behaviour can be augmented by passing custom ``notFound`` value to setText 
  + ``\n`` New Line ``<br>``
  + ``[Paragraph 1][Paragraph 2]`` Multiple paragraphs ``<p>``
  + ``#``-``####`` Headers ``<h1>-<h4>``
+ + \`\` \*as*\_[IS]_ \`\`  Literal  *new - V1*
 
 ### Unit tests are half-loaf documentation
 You are welcomed to consult examples folder and unit tests for usage details and examples.
 
 ## Breaking changes
+### 0.6
+##### Literal \`\` in V1 syntax
+New \`\` syntax  \`\` (in V1 only) to disable MD processing.
+
 ### 0.5
 ##### React 16+ required
 As React now allows fragments and strings in render the default behavior of ``<T.text>`` changed not to wrap the output into ``<span>`` when ``tag`` property is not specified.

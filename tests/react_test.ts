@@ -4,6 +4,8 @@ import { default as formatHTML, textHTML } from './formatHTML';
 import T from '../src/i18n-react';
 
 describe("i18n-react", () => {
+  beforeEach(() => T.setOpts({ MDFlavor: 0 }));
+
   it("format renders <strong>", () => {
     expect(formatHTML("*bold*")).toBe("<strong>bold</strong>");
     expect(formatHTML("a *bold* move")).toBe("a <strong>bold</strong> move");
@@ -89,6 +91,11 @@ describe("i18n-react", () => {
 
   it("format renders React variables", () => {
     expect(formatHTML("z{R}z", { R: React.createElement('b', null, 'B') })).toBe("z<b>B</b>z");
+  });
+
+  it("format handles literal", () => {
+    T.setOpts({ MDFlavor: 1 });
+    expect(formatHTML("``z[a][b]z``")).toBe("z[a][b]z");
   });
 
 });
