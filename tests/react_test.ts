@@ -1,13 +1,9 @@
-import React = require('react');
-import renderElement from './renderElement';
+import * as React from 'react';
+import { default as formatHTML, textHTML } from './formatHTML';
+
 import T from '../src/i18n-react';
 
 describe("i18n-react", () => {
-  function formatHTML(text: string, o?: any): string {
-    var s = renderElement(React.createElement('super', null, T.format(text, o)));
-    return s.replace(/<\/?super>/g, '');
-  }
-
   it("format renders <strong>", () => {
     expect(formatHTML("*bold*")).toBe("<strong>bold</strong>");
     expect(formatHTML("a *bold* move")).toBe("a <strong>bold</strong> move");
@@ -20,16 +16,13 @@ describe("i18n-react", () => {
     expect(formatHTML("2*3* 4")).toBe("2*3* 4");
   });
 
-  function html(o?: any): string {
-    return renderElement(React.createElement(T.text, o));
-  }
 
   it("<T> renders <strong>", () => {
     T.setTexts({ bold: "*bold*", b2: "a *bold* move *nice*" });
-    expect(html({ text: "bold"})).toBe("<span><strong>bold</strong></span>");
-    expect(html({ text: "bold", tag: 'p'})).toBe("<p><strong>bold</strong></p>");
-    expect(html({ text: "bold", tag: 'div'})).toBe("<div><strong>bold</strong></div>");
-    expect(html({ text: "b2", tag: 'p'})).toBe("<p>a <strong>bold</strong> move <strong>nice</strong></p>");
+    expect(textHTML({ text: "bold" })).toBe("<strong>bold</strong>");
+    expect(textHTML({ text: "bold", tag: 'p' })).toBe("<p><strong>bold</strong></p>");
+    expect(textHTML({ text: "bold", tag: 'div' })).toBe("<div><strong>bold</strong></div>");
+    expect(textHTML({ text: "b2", tag: 'p' })).toBe("<p>a <strong>bold</strong> move <strong>nice</strong></p>");
   });
 
   it("format renders <em>", () => {
@@ -53,7 +46,7 @@ describe("i18n-react", () => {
 
   it("<T> renders <p>", () => {
     T.setTexts({ p3: "[a][b][c]" });
-    expect(html({ text: "p3"})).toBe("<span><p>a</p><p>b</p><p>c</p></span>");;
+    expect(textHTML({ text: "p3" })).toBe("<p>a</p><p>b</p><p>c</p>");;
   });
 
   it("format renders <h1-4>", () => {
@@ -87,15 +80,15 @@ describe("i18n-react", () => {
 
   it("<T> transfers html attributes", () => {
     T.setTexts({ a: "a", b: "{val}" });
-    expect(html({ text: "a", className: "cl"})).toBe("<span class=\"cl\">a</span>");
-    expect(html({ text: "a", tag: 'p', 'data-x': 'x'})).toBe("<p data-x=\"x\">a</p>");
-    expect(html({ text: "a", tag: 'a', href: '#'})).toBe("<a href=\"#\">a</a>");
+    expect(textHTML({ text: "a", tag: 'span', className: "cl" })).toBe("<span class=\"cl\">a</span>");
+    expect(textHTML({ text: "a", tag: 'p', 'data-x': 'x' })).toBe("<p data-x=\"x\">a</p>");
+    expect(textHTML({ text: "a", tag: 'a', href: '#' })).toBe("<a href=\"#\">a</a>");
 
-    expect(html({ text: { key: "b", val: 'B' }, className: "cl"})).toBe("<span class=\"cl\">B</span>");
+    expect(textHTML({ text: { key: "b", val: 'B' }, tag: 'span', className: "cl" })).toBe("<span class=\"cl\">B</span>");
   });
 
   it("format renders React variables", () => {
-    expect(formatHTML("z{R}z", { R: React.createElement('b', null, 'B')})).toBe("z<b>B</b>z");
+    expect(formatHTML("z{R}z", { R: React.createElement('b', null, 'B') })).toBe("z<b>B</b>z");
   });
 
 });

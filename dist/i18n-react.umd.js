@@ -131,7 +131,7 @@ function flatten(l) {
     flush();
     return r.length > 1 ? r : (r.length ? r[0] : null);
 }
-var matcher = (function () {
+var matcher = /** @class */ (function () {
     function matcher(mdFlavor, inter, self) {
         this.mdFlavor = mdFlavor;
         this.inter = inter;
@@ -209,10 +209,11 @@ function resolveContext(node, context) {
         return resolveContextPath(node, 0, ctx_keys, context);
     }
 }
-var MDText = (function () {
+var MDText = /** @class */ (function () {
     function MDText(texts, opt) {
         this.texts = texts;
         this.MDFlavor = 0;
+        // public access is deprecated
         this.notFound = undefined;
         this.p = this.factory('p');
         this.span = this.factory('span');
@@ -273,6 +274,7 @@ var MDText = (function () {
     };
     MDText.prototype.factory = function (tagF) {
         var _this = this;
+        // name High Order Function for React Dev tools
         var MDText = function (props) {
             var text = props.text, tag = props.tag, restProps = __rest(props, ["text", "tag"]);
             var key;
@@ -287,7 +289,11 @@ var MDText = (function () {
                 key = text.key;
                 options = text;
             }
-            return React.createElement(tagF || tag || 'span', restProps, _this.translate(key, options));
+            var aTag = tagF || tag;
+            var translation = _this.translate(key, options);
+            return aTag ?
+                React.createElement(aTag, restProps, translation) :
+                translation;
         };
         return MDText;
     };

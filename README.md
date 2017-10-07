@@ -130,6 +130,10 @@ This behaviour can be augmented by passing custom ``notFound`` value to setText 
 You are welcomed to consult examples folder and unit tests for usage details and examples.
 
 ## Breaking changes
+### 0.5
+##### React 16+ required
+As React now allows fragments and strings in render the default behavior of ``<T.text>`` changed not to wrap the output into ``<span>`` when ``tag`` property is not specified.
+
 ### 0.4
 ##### New MD syntax
 The new MD flavor (aligned with github's Markdown) is added : V1. Opt-in for this release, will become default in the next major release.

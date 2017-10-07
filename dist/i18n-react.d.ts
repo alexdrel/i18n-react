@@ -14,14 +14,14 @@ export declare class MDText {
     interpolate(exp: string, vars: object): any;
     format(value: string, vars?: object): React.ReactNode;
     translate(key: string, options?: any): React.ReactNode;
-    factory(tagF: string): (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    p: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    span: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    li: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    div: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    button: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    a: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
-    text: (props: any) => React.ComponentElement<any, React.Component<any, React.ComponentState>>;
+    factory(tagF: string): React.StatelessComponent<any>;
+    p: React.StatelessComponent<any>;
+    span: React.StatelessComponent<any>;
+    li: React.StatelessComponent<any>;
+    div: React.StatelessComponent<any>;
+    button: React.StatelessComponent<any>;
+    a: React.StatelessComponent<any>;
+    text: React.StatelessComponent<any>;
 }
 declare var singleton: MDText;
 export default singleton;

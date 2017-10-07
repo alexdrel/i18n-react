@@ -4,10 +4,18 @@ import { MDText } from '../src/i18n-react';
 
 describe("i18n-react", () => {
 
+  it("renders <T.text>", () => {
+    let T = new MDText({ x: "X", ll: "[l1][l2]", l2: "__b__[_v_]ddd" }, { MDFlavor: 1 });
+
+    expect(renderElement(<T.text text="x" />)).toBe("X");
+    expect(renderElement(<T.text text="ll" />)).toBe("<p>l1</p><p>l2</p>");
+    expect(renderElement(<T.text text="l2" />)).toBe("<b>b</b><p><i>v</i></p>ddd");
+  });
+
   it("renders <T.tags>", () => {
     let T = new MDText({ x: "X", y: "Y" });
 
-    expect(renderElement(<T.text text="x" />)).toBe("<span>X</span>");
+    expect(renderElement(<T.text text="x" />)).toBe("X");
     expect(renderElement(<T.span text="x" />)).toBe("<span>X</span>");
     expect(renderElement(<T.p text="x" />)).toBe("<p>X</p>");
     expect(renderElement(<T.a text="x" href="#" />)).toBe('<a href="#">X</a>');
@@ -43,10 +51,11 @@ describe("i18n-react", () => {
     expect(renderElement(<T.text tag="strong" text="x" context="b" />)).toBe("<strong>Xb</strong>");
     expect(renderElement(<T.text tag="p" text={{ key: "x", context: 'b' }} />)).toBe("<p>Xb</p>");
 
-    expect(renderElement(<T.text text="xx" notFound="b" />)).toBe("<span>b</span>");
+    expect(renderElement(<T.text text="xx" notFound="b" />)).toBe("b");
   });
 
-  it(" ignores custom attributes", () => {
+  // react 16 started to pass unknown attributes to DOM
+  xit(" ignores custom attributes", () => {
     let T = new MDText({ x: "X", y: "Y" });
     // supress react 15.2 warnings - Unknown prop `ZZ` on <span> tag.
     let cerror = console.error;

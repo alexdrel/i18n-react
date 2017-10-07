@@ -1,6 +1,6 @@
 {
   "name": "i18n-react",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
   "typings": "dist/i18n-react.d.ts",
@@ -26,28 +26,31 @@
   "author": "Alex Drel",
   "license": "MIT",
   "engines": {
-    "node": "4.x.x || 6.x.x",
-    "npm": "5.x.x"
+    "node": ">=4.0",
+    "npm": ">=3.0"
   },
   "dependencies": {},
+  "peerDependencies": {
+    "react": ">=16.0.0"
+  },
   "devDependencies": {
-    "@types/jasmine": "^2.5.53",
-    "@types/react": "^15.6.0",
-    "@types/react-dom": "^15.5.1",
-    "jasmine-core": "^2.6.4",
+    "@types/jasmine": "^2.6.0",
+    "@types/react": "^16.0.10",
+    "@types/react-dom": "^16.0.1",
+    "jasmine-core": "^2.8.0",
     "json-loader": "^0.5.7",
     "jsx-loader": "^0.13.2",
-    "karma": "^1.7.0",
+    "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.4",
     "node-libs-browser": "^2.0.0",
-    "ts-loader": "^2.3.2",
-    "typescript": "^2.4.2",
-    "webpack": "^3.4.1",
-    "webpack-dev-server": "^2.6.1",
+    "ts-loader": "^2.3.7",
+    "typescript": "^2.5.3",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1",
     "yaml-loader": "^0.5.0"
   }
 }

@@ -210,13 +210,13 @@ export class MDText {
         options = text;
       }
 
-      return React.createElement(
-        tagF || tag || 'span',
-        restProps,
-        this.translate(key, options)
-      );
+      let aTag = tagF || tag;
+      let translation = this.translate(key, options)
+      return aTag ?
+        React.createElement(aTag, restProps, translation) :
+        translation;
     };
-    return MDText;
+    return MDText as React.StatelessComponent<any>;
   }
 
   p = this.factory('p');

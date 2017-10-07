@@ -10,9 +10,8 @@ module.exports = function (config) {
       'text/x-typescript': ['ts','tsx']
     },
     files: [
-      "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom-server.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.development.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom-server.browser.development.js",
       // all files ending in "_test"
       'tests/*_test.*',
       'tests/**/*_test.*'

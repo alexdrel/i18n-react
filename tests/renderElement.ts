@@ -1,6 +1,5 @@
-import React = require('react');
-import ReactDOMServer = require('react-dom-server');
+import * as ReactDOMServer from 'react-dom-server';
 
-export default function formatHTML(element: any): string {
+export default function renderElement(element: any): string {
   return ReactDOMServer.renderToStaticMarkup(element);
 }
