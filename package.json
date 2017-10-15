@@ -1,6 +1,6 @@
 {
   "name": "i18n-react",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "React JS text internationalization and externalizing",
   "main": "dist/i18n-react.js",
   "typings": "dist/i18n-react.d.ts",

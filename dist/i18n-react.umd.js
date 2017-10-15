@@ -354,7 +354,7 @@ exports.mdFlavors = [
         }
     },
     {
-        maybe: /[\*_~\{\[\n]/,
+        maybe: /[`\*_~\{\[\n]/,
         tags: {
             literal: R["``"],
             strong: R["**"],

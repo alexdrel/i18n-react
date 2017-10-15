@@ -38,7 +38,7 @@ export const mdFlavors: MDFlavor[] = [
     }
   },
   { // V1
-    maybe: /[\*_~\{\[\n]/,
+    maybe: /[`\*_~\{\[\n]/,
     tags: {
       literal: R["``"],
       strong: R["**"],
