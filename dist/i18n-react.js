@@ -154,7 +154,7 @@ var MDText = /** @class */ (function () {
     MDText.prototype.setOpts = function (opt) {
         if (!opt)
             return;
-        if (opt.notFound != undefined)
+        if (opt.notFound !== undefined)
             this.notFound = opt.notFound;
         if (opt.MDFlavor !== undefined)
             this.MDFlavor = opt.MDFlavor;

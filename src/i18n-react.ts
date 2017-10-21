@@ -144,7 +144,7 @@ export class MDText {
 
   setOpts(opt: MDTextOpts) {
     if (!opt) return;
-    if (opt.notFound != undefined) this.notFound = opt.notFound;
+    if (opt.notFound !== undefined) this.notFound = opt.notFound;
     if (opt.MDFlavor !== undefined) this.MDFlavor = opt.MDFlavor;
   }
 
