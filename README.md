@@ -119,7 +119,7 @@ If it is a string, then it will be returned as is any time a key is missing.
 If you provide a function, then the function will be run with the missing key
 as its only arguments.
 
-```
+```js
 // "Not Found!" will replace all missing translations 
 T.setTexts(translations, {
   notFound: 'Not Found!'
@@ -127,14 +127,14 @@ T.setTexts(translations, {
   
 // "SomeKey <-- this guy" will appear instead
 T.setTexts(translations, {
-  notFound: (key: string) => {
+  notFound: key => {
     return `${key} <-- this guy`
   }
 })
   
 // you can combine this solution with markdown!
 T.setTexts(translations, {
-  notFound: (key: string) => {
+  notFound: key => {
     return `**${key}**` // will render <strong>SomeKey</strong>
   }
 })
