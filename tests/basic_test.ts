@@ -82,6 +82,8 @@ describe("i18n-react translate", () => {
     expect(T.translate('na.na', { notFound: 'NA' })).toBe("NA");
     T.notFound = null;
     expect(T.translate('na.na')).toBeNull();
+    T.notFound = (key) => key + ' not found';
+    expect(T.translate('na.na')).toBe('na.na not found');
     T.notFound = undefined;
     expect(T.translate('na.na')).toBe("na.na");
     let T1 = new MDText({}, { notFound: 'NA' });
@@ -96,6 +98,10 @@ describe("i18n-react translate", () => {
     expect(T1.translate('na.na')).toBe("na.na");
     expect(T1.translate('na.na', { notFound: 'NA' })).toBe('NA');
     expect(T1.translate('na.na', { notFound: null })).toBe(null);
+
+    T1 = new MDText({}, { notFound: (key) => key + ' not found' });
+    expect(T1.translate('na.na')).toBe('na.na not found');
+    expect(T1.translate('na.na', { notFound: 'NA' })).toBe('NA');
   });
 });
 

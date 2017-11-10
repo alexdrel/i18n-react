@@ -1,8 +1,9 @@
 /// <reference types="react" />
 import * as React from 'react';
+export declare type NotFound = string | ((key: string) => string);
 export interface MDTextOpts {
     MDFlavor?: 0 | 1;
-    notFound?: string;
+    notFound?: NotFound;
 }
 export declare class MDText {
     texts: object;
@@ -10,7 +11,7 @@ export declare class MDText {
     setTexts(texts: object, opt?: MDTextOpts): void;
     setOpts(opt: MDTextOpts): void;
     private MDFlavor;
-    notFound: string;
+    notFound: NotFound;
     interpolate(exp: string, vars: object): any;
     format(value: string, vars?: object): React.ReactNode;
     translate(key: string, options?: any): React.ReactNode;
