@@ -114,6 +114,32 @@ By default if translation for the specified key is not present the key itself is
 to help you find the missing translation.
 This behaviour can be augmented by passing custom ``notFound`` value to setText options or MDText contructor.
 
+This value can be either a string, or a function of type `string -> string`. 
+If it is a string, then it will be returned as is any time a key is missing.
+If you provide a function, then the function will be run with the missing key
+as its only arguments.
+
+```js
+// "Not Found!" will replace all missing translations 
+T.setTexts(translations, {
+  notFound: 'Not Found!'
+})
+  
+// "SomeKey <-- this guy" will appear instead
+T.setTexts(translations, {
+  notFound: key => {
+    return `${key} <-- this guy`
+  }
+})
+  
+// you can combine this solution with markdown!
+T.setTexts(translations, {
+  notFound: key => {
+    return `**${key}**` // will render <strong>SomeKey</strong>
+  }
+})
+```
+
 ### Markdown syntax
 
  + ``*italic*`` *italic*  - ``<em>`` **breaking change V1, ``<strong>`` in V0**
@@ -125,7 +151,7 @@ This behaviour can be augmented by passing custom ``notFound`` value to setText 
  + ``\n`` New Line ``<br>``
  + ``[Paragraph 1][Paragraph 2]`` Multiple paragraphs ``<p>``
  + ``#``-``####`` Headers ``<h1>-<h4>``
- + \`\` \*as*\_[IS]_ \`\`  Literal  *new - V1*
+ + \`\` \*as\*\_[IS]\_ \`\`  Literal  *new - V1*
 
 ### Unit tests are half-loaf documentation
 You are welcomed to consult examples folder and unit tests for usage details and examples.
