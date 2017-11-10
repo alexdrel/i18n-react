@@ -11,6 +11,12 @@ var __rest = (this && this.__rest) || function (s, e) {
 exports.__esModule = true;
 var React = require("react");
 var mdflavors_1 = require("./mdflavors");
+function keyNotFound(notFound, key) {
+    if (typeof notFound === 'function') {
+        return notFound(key);
+    }
+    return notFound;
+}
 function isString(s) {
     return typeof s === 'string' || s instanceof String;
 }
@@ -189,8 +195,8 @@ var MDText = /** @class */ (function () {
             trans = resolveContext(trans, options && options.context);
         }
         if (trans == null) {
-            return (options && options.notFound !== undefined) ? options.notFound :
-                this.notFound !== undefined ? this.notFound :
+            return (options && options.notFound !== undefined) ? keyNotFound(options.notFound, key) :
+                this.notFound !== undefined ? keyNotFound(this.notFound, key) :
                     key;
         }
         return this.format(trans, options);

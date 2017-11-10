@@ -91,6 +91,12 @@ var __rest = (this && this.__rest) || function (s, e) {
 exports.__esModule = true;
 var React = __webpack_require__(1);
 var mdflavors_1 = __webpack_require__(2);
+function keyNotFound(notFound, key) {
+    if (typeof notFound === 'function') {
+        return notFound(key);
+    }
+    return notFound;
+}
 function isString(s) {
     return typeof s === 'string' || s instanceof String;
 }
@@ -269,8 +275,8 @@ var MDText = /** @class */ (function () {
             trans = resolveContext(trans, options && options.context);
         }
         if (trans == null) {
-            return (options && options.notFound !== undefined) ? options.notFound :
-                this.notFound !== undefined ? this.notFound :
+            return (options && options.notFound !== undefined) ? keyNotFound(options.notFound, key) :
+                this.notFound !== undefined ? keyNotFound(this.notFound, key) :
                     key;
         }
         return this.format(trans, options);

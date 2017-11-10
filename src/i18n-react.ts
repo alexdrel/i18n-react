@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { mdFlavors, MDFlavor, mdMatch } from './mdflavors';
 
+export type NotFound = string | ((key: string) => string);
+
+function keyNotFound(notFound: NotFound, key: string ) {
+  if (typeof notFound === 'function') {
+    return notFound(key);
+  }
+
+  return notFound;
+}
+
 function isString(s: any): s is string {
   return typeof s === 'string' || s instanceof String;
 }
@@ -129,7 +139,7 @@ function resolveContext(node: any, context: any): string {
 
 export interface MDTextOpts {
   MDFlavor?: 0 | 1;
-  notFound?: string;
+  notFound?: NotFound;
 }
 
 export class MDText {
@@ -150,7 +160,7 @@ export class MDText {
 
   private MDFlavor: 0 | 1 = 0;
   // public access is deprecated
-  public notFound: string = undefined;
+  public notFound: NotFound = undefined;
 
   interpolate(exp: string, vars: object): any {
     const [vn, flags] = exp.split(',');
@@ -187,8 +197,8 @@ export class MDText {
     }
 
     if (trans == null) {
-      return (options && options.notFound !== undefined) ? options.notFound :
-        this.notFound !== undefined ? this.notFound :
+      return (options && options.notFound !== undefined) ? keyNotFound(options.notFound, key) :
+        this.notFound !== undefined ? keyNotFound(this.notFound, key) :
           key;
     }
 
