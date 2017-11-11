@@ -11,17 +11,14 @@ var __rest = (this && this.__rest) || function (s, e) {
 exports.__esModule = true;
 var React = require("react");
 var mdflavors_1 = require("./mdflavors");
-function keyNotFound(notFound, key) {
-    if (typeof notFound === 'function') {
-        return notFound(key);
-    }
-    return notFound;
-}
 function isString(s) {
     return typeof s === 'string' || s instanceof String;
 }
 function isObject(o) {
     return typeof o === 'object';
+}
+function isFunction(o) {
+    return typeof o === 'function';
 }
 function get(obj, path) {
     var spath = path.split('.');
@@ -64,7 +61,7 @@ var matcher = /** @class */ (function () {
         this.self = self;
     }
     matcher.prototype.M = function (value) {
-        if (value == null || value == '')
+        if (!value)
             return null;
         var m = mdflavors_1.mdMatch(this.mdFlavor, value);
         if (!m)
@@ -185,19 +182,25 @@ var MDText = /** @class */ (function () {
     };
     MDText.prototype.format = function (value, vars) {
         var _this = this;
+        if (!value)
+            return value;
         return new matcher(mdflavors_1.mdFlavors[this.MDFlavor], function (exp) { return _this.interpolate(exp, vars); }, function (exp) { return _this.translate(exp, vars); }).M(value);
     };
     MDText.prototype.translate = function (key, options) {
-        if (key == null)
-            return null;
+        if (!key)
+            return key;
         var trans = get(this.texts, key);
-        if (trans != null && !isString(trans)) {
-            trans = resolveContext(trans, options && options.context);
+        var context = options && options.context;
+        if (trans != null && !(isString(trans) || isFunction(trans))) {
+            trans = resolveContext(trans, context);
         }
         if (trans == null) {
-            return (options && options.notFound !== undefined) ? keyNotFound(options.notFound, key) :
-                this.notFound !== undefined ? keyNotFound(this.notFound, key) :
+            trans = (options && options.notFound !== undefined) ? options.notFound :
+                this.notFound !== undefined ? this.notFound :
                     key;
+        }
+        if (isFunction(trans)) {
+            trans = trans(key, context);
         }
         return this.format(trans, options);
     };

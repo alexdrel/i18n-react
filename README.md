@@ -114,33 +114,41 @@ By default if translation for the specified key is not present the key itself is
 to help you find the missing translation.
 This behaviour can be augmented by passing custom ``notFound`` value to setText options or MDText contructor.
 
-This value can be either a string, or a function of type `string -> string`. 
+This value can be either a string, or a function returning a string.
 If it is a string, then it will be returned as is any time a key is missing.
 If you provide a function, then the function will be run with the missing key
-as its only arguments.
+and context as arguments.
 
 ```js
-// "Not Found!" will replace all missing translations 
+// "Not Found!" will replace all missing translations
 T.setTexts(translations, {
   notFound: 'Not Found!'
 })
-  
+
 // "SomeKey <-- this guy" will appear instead
 T.setTexts(translations, {
-  notFound: key => {
-    return `${key} <-- this guy`
-  }
+  notFound: key => `${key} <-- this guy`
 })
-  
+
 // you can combine this solution with markdown!
 T.setTexts(translations, {
-  notFound: key => {
-    return `**${key}**` // will render <strong>SomeKey</strong>
-  }
+  notFound: key => `**${key}**` // will render <strong>SomeKey</strong>
 })
 ```
 
-### Markdown syntax
+### Function in translation
+Translation dictionaries can be extended with functions (as in notFound).
+
+```js
+T.setTexts({
+    a: 'A',
+    n: (_key, ctx) => ctx ? `Number ${ctx}` : '',
+  });
+T.translate('a')) // 'A'
+T.translate('n', { context: 9 })) // 'Number 9'
+```
+
+## Markdown syntax
 
  + ``*italic*`` *italic*  - ``<em>`` **breaking change V1, ``<strong>`` in V0**
  + ``_italic_`` _italic_  - ``<i>`` **breaking change V1, ``<em>`` in V0**

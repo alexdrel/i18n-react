@@ -31,6 +31,12 @@ describe("i18n-react translate", () => {
     }
   });
 
+  it("empty values", () => {
+    expect(T.translate(undefined)).toBe(undefined);
+    expect(T.translate(null)).toBe(null);
+    expect(T.translate("")).toBe("");
+  });
+
   it("loads plain string", () => {
     expect(T.translate('a')).toBe('A');
     expect(T.translate('aa.b.c')).toBe('AABC');
@@ -77,8 +83,8 @@ describe("i18n-react translate", () => {
     expect(T.translate('na.na')).toBe("na.na");
     expect(T.translate('na.na', { context: 'X' })).toBe("na.na");
     expect(T.translate('na.na', { notFound: 'NA' })).toBe("NA");
-    T.notFound = '_NA_';
-    expect(T.translate('na.na')).toBe("_NA_");
+    T.notFound = 'NA';
+    expect(T.translate('na.na')).toBe("NA");
     expect(T.translate('na.na', { notFound: 'NA' })).toBe("NA");
     T.notFound = null;
     expect(T.translate('na.na')).toBeNull();
@@ -101,12 +107,19 @@ describe("i18n-react translate", () => {
 
     T1 = new MDText({}, { notFound: (key) => key + ' not found' });
     expect(T1.translate('na.na')).toBe('na.na not found');
-    expect(T1.translate('na.na', { notFound: 'NA' })).toBe('NA');
+    T1 = new MDText({}, { notFound: (key, ctx) => key + ' not found, a:' + ctx.a });
+    expect(T1.translate('na.na', { context: { a: 1 } })).toBe('na.na not found, a:1');
   });
 });
 
 describe("i18n-react format", () => {
   let T = new MDText(null, { MDFlavor: 1 });
+  it("empty values", () => {
+    expect(T.format(undefined)).toBe(undefined);
+    expect(T.format(null)).toBe(null);
+    expect(T.format("")).toBe("");
+  });
+
   it("interpolates variable", () => {
     expect(T.format("{val}", { val: 'x' })).toBe('x');
     expect(T.format("b{val}", { val: 'x' })).toBe('bx');

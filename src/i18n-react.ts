@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { mdFlavors, MDFlavor, mdMatch } from './mdflavors';
 
-export type NotFound = string | ((key: string) => string);
-
-function keyNotFound(notFound: NotFound, key: string ) {
-  if (typeof notFound === 'function') {
-    return notFound(key);
-  }
-
-  return notFound;
-}
+export type NotFound = string | ((key: string, context?: any) => string);
 
 function isString(s: any): s is string {
   return typeof s === 'string' || s instanceof String;
@@ -17,6 +9,10 @@ function isString(s: any): s is string {
 
 function isObject(o: any) {
   return typeof o === 'object';
+}
+
+function isFunction(o: any) {
+  return typeof o === 'function';
 }
 
 function get(obj: any, path: string): any {
@@ -60,8 +56,7 @@ class matcher {
   }
 
   M(value: string): React.ReactNode {
-    if (value == null || value == '')
-      return null;
+    if (!value) return null;
 
     const m = mdMatch(this.mdFlavor, value);
     if (!m)
@@ -180,6 +175,8 @@ export class MDText {
   }
 
   format(value: string, vars?: object): React.ReactNode {
+    if (!value) return value;
+
     return new matcher(
       mdFlavors[this.MDFlavor],
       (exp: string) => this.interpolate(exp, vars),
@@ -188,18 +185,23 @@ export class MDText {
   }
 
   translate(key: string, options?: any): React.ReactNode {
-    if (key == null) return null;
+    if (!key) return key;
 
     var trans: string | any = get(this.texts, key);
+    const context = options && options.context;
 
-    if (trans != null && !isString(trans)) {
-      trans = resolveContext(trans, options && options.context);
+    if (trans != null && !(isString(trans) || isFunction(trans))) {
+      trans = resolveContext(trans, context);
     }
 
     if (trans == null) {
-      return (options && options.notFound !== undefined) ? keyNotFound(options.notFound, key) :
-        this.notFound !== undefined ? keyNotFound(this.notFound, key) :
+      trans = (options && options.notFound !== undefined) ? options.notFound :
+        this.notFound !== undefined ? this.notFound :
           key;
+    }
+
+    if (isFunction(trans)) {
+      trans = trans(key, context);
     }
 
     return this.format(trans, options);

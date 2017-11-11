@@ -89,9 +89,11 @@ describe("i18n-react", () => {
     expect(renderElement(<T.p text={{ key: "z", notFound: 'ZZ' }} />)).toBe("<p>ZZ</p>");
 
     T.notFound = '_NA_';
-    expect(renderElement(<T.p text="z" />)).toBe("<p>_NA_</p>");
-    T = new MDText({ x: "X", y: "Y" }, { notFound: '__' });
-    expect(renderElement(<T.p text="z" />)).toBe("<p>__</p>");
+    expect(renderElement(<T.p text="z" />)).toBe("<p><em>NA</em></p>");
+    T = new MDText({ x: "X", y: "Y" }, { notFound: 'ZZ' });
+    expect(renderElement(<T.p text="z" />)).toBe("<p>ZZ</p>");
+    T.notFound = (key) => `_${key}_ not found`;
+    expect(renderElement(<T.p text="z" />)).toBe("<p><em>z</em> not found</p>");
   });
 });
 
