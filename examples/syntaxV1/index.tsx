@@ -1,6 +1,6 @@
 import React = require('react');
 import ReactDOM = require('react-dom');
-import T from '../../dist/i18n-react';
+import { MDText } from '../../dist/i18n-react';
 
 
 const styles = {
@@ -19,7 +19,7 @@ const styles = {
   '': "``[*as*]_[is]_``",
 };
 
-T.setTexts({
+const T = new MDText({
   title: "Supported Markdown syntax *(V1 flavor)*",
   styles: styles,
 }, { MDFlavor: 1 });
@@ -32,7 +32,7 @@ ReactDOM.render(
         <li key={n}>
           <T.div text={"styles." + n} />
           <em>{'"' + (styles as any)[n].replace('\n', "\\n") + '"  '}</em>
-          {n && [<b key="b">{` <${n}>`}</b>, "tag "]}
+          {n && [<b key="b">{` <${n}>`}</b>, " tag"]}
         </li>
       )}
     </ul>

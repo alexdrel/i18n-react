@@ -1,0 +1,22 @@
+greetings:
+  hello: Hi, {who}!
+  howdy:
+    formal: How do you do?
+    normal: How are you, {who}?
+    informal: "What's up?"
+  bye: Bye
+
+longTime:
+  0: Not a day no see
+  1: 1 day no see
+  '2..4': A few days no see
+  _: "[{context} days][Long time no see]"
+
+lorem: |
+  # Lorem
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ## Quisque
+  Quisque sit amet nisi quis eros cursus finibus quis sed nisl.
+  ### Integer
+  Integer efficitur pharetra pretium.
+  Sed semper dui vitae nibh scelerisque sodales.

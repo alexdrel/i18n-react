@@ -8,15 +8,16 @@ Markdown-ish syntax with variables support (including of react element type).
 ### Quick example
 
 ```js
+var ReactDOM = require('react-dom');
 var React = require('react');
-var T = require('i18n-react');
+const { MDText } = require('i18n-react');
 
-T.setTexts({
-  greeting: "### Hello, World!\n My name is **{myName}**! \n {{howAreYou}}",
+const T = new MDText({
+  greeting: "#Hello, World!\n My name is **{myName}**! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
-});
+}, { MDFlavor: 1 });
 
-React.render(
+ReactDOM.render(
   <T.span text={{ key: "greeting", myName: "i18n-react" }}/>,
   document.getElementById('content')
 );
@@ -62,6 +63,7 @@ Points of interest:
 Npm compatible packager (browserify/webpack) is recommended, but ```Dist``` folder also contains UMD versions
 (regular and minified) that can be used w/o commonJS packager.
 
+### Global Singleton
 ```js
 /* ES6 & TS */
 import T from 'i18n-react';
@@ -72,14 +74,15 @@ var T = window['i18n-react'].default;
 ```
 
 
-Initialize once - probably in an application entry point js:
+Setup once - probably in an application entry point js:
 ```js
 T.setTexts({
   greeting: "Hello, World! My name is *{myName}*! \n {{howAreYou}}",
   howAreYou:  "_How do you do?_"
 }, { MDFlavor: 0 });
 /* or if there is yaml/json loader */
-T.setTexts(require('../texts/texts-en.yml'));
+var dictionary = require('../texts/texts-en.yml');
+T.setTexts(dictionary);
 ```
 
 Use it anywhere:
@@ -99,6 +102,19 @@ import { MDText } from 'i18n-react';
 let T = new MDText({...});
 let x = T.translate("path.to.string");
 <T.span text="path.to.string" />
+```
+### Passing in the React Context
+MDText object can be passed in the react 16.3+ context. See examples/yaml for complete example.
+```tsx
+import { MDText } from 'i18n-react';
+let MDTextContext = React.createContext();
+let Texts = new MDText({...});
+
+<MDTextContext.Provider value={Texts}>
+    <MDTextContext.Consumer>{ (T) =>
+      <T.span text="path.to.string" />
+    }</MDTextContext.Consumer>
+</MDTextContext.Provider>
 ```
 
 ### Difference between Keys and Context

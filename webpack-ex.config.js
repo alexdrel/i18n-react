@@ -4,7 +4,8 @@ module.exports = {
   entry: {
     hello: './examples/hello/index.jsx',
     syntaxV1: './examples/syntaxV1/index.tsx',
-    yaml: './examples/yaml/index.jsx'
+    yaml: './examples/yaml/index.jsx',
+    "yaml-ts": './examples/yaml-ts/index.tsx'
   },
   output: {
     filename: './examples/[name]/build/index.js'
@@ -14,7 +15,7 @@ module.exports = {
     "react-dom": "ReactDOM",
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.tsx'],
     modules: [ '.', 'node_modules' ],
   },
   module: {
