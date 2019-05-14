@@ -70,6 +70,7 @@ class matcher {
       case "self":
         middle = this.self && this.self(m.body);
         break;
+      case "literals":
       case "literal":
         middle = m.body;
         break;

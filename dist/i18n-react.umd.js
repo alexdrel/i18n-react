@@ -154,6 +154,7 @@ var matcher = /** @class */ (function () {
             case "self":
                 middle = this.self && this.self(m.body);
                 break;
+            case "literals":
             case "literal":
                 middle = m.body;
                 break;
@@ -330,7 +331,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 exports.__esModule = true;
 var R = {
-    "``": /^(.*?)``(.*?)``(.*)$/,
+    "`` ": [/^(.*?(?:(?!`).|^))(``+)\s(.*?)\s\2(?!`)(.*)$/, [1, 3, 4]],
+    "``": /^(.*?)``(?!\s|`)(.*?)``(.*)$/,
     "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
     "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
     "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
@@ -344,7 +346,7 @@ var R = {
     "####": /^(|.*?(?=\n))\n*\s*####([^#].*?)#*\s*\n+([\S\s]*)$/,
     "\n": /^(.*?)[^\S\n]*\n()[^\S\n]*([\s\S]*)$/,
     "{{}}": /^(.*?)\{\{(.*?)\}\}(.*)$/,
-    "{}": /^(.*?)\{(.*?)\}(.*)$/
+    "{}": /^(.*?)\{(.*?)\}(.*)$/,
 };
 exports.mdFlavors = [
     {
@@ -359,12 +361,13 @@ exports.mdFlavors = [
             h4: R["####"],
             br: R["\n"],
             self: R["{{}}"],
-            inter: R["{}"]
+            inter: R["{}"],
         }
     },
     {
         maybe: /[`\*_~\{\[\n]/,
         tags: {
+            literals: R["`` "],
             literal: R["``"],
             strong: R["**"],
             em: R["*"],
@@ -379,7 +382,7 @@ exports.mdFlavors = [
             h4: R["####"],
             br: R["\n"],
             self: R["{{}}"],
-            inter: R["{}"]
+            inter: R["{}"],
         }
     }
 ];
@@ -387,19 +390,20 @@ function mdMatch(md, value) {
     if (!value.match(md.maybe))
         return null;
     var tags = md.tags;
-    var match = null, tag = null;
+    var match = null;
     for (var ctag in tags) {
         if (!tags.hasOwnProperty(ctag))
             continue;
-        var cmatch = tags[ctag].exec(value);
+        var rg = tags[ctag];
+        var _a = rg instanceof RegExp ? [rg, [1, 2, 3]] : rg, regex = _a[0], groups = _a[1];
+        var cmatch = regex.exec(value);
         if (cmatch) {
-            if (match == null || cmatch[1].length < match[1].length) {
-                match = cmatch;
-                tag = ctag;
+            if (match == null || cmatch[groups[0]].length < match.head.length) {
+                match = { tag: ctag, head: cmatch[groups[0]], body: cmatch[groups[1]], tail: cmatch[groups[2]] };
             }
         }
     }
-    return match && { tag: tag, head: match[1], body: match[2], tail: match[3] };
+    return match;
 }
 exports.mdMatch = mdMatch;
 

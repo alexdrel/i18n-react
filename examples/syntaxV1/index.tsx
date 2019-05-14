@@ -16,7 +16,7 @@ const styles = {
   h2: "## Header\nText",
   h3: "### Header\nText",
   h4: "#### Header\nText",
-  '': "``[*as*]_[is]_``",
+  '': "`` [*as*]_``_[is] ``",
 };
 
 const T = new MDText({
@@ -31,7 +31,7 @@ ReactDOM.render(
       Object.keys(styles).map(n =>
         <li key={n}>
           <T.div text={"styles." + n} />
-          <em>{'"' + (styles as any)[n].replace('\n', "\\n") + '"  '}</em>
+          <code>{'"' + (styles as any)[n].replace('\n', "\\n") + '"  '}</code>
           {n && [<b key="b">{` <${n}>`}</b>, " tag"]}
         </li>
       )}

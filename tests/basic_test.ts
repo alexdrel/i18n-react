@@ -130,9 +130,23 @@ describe("i18n-react format", () => {
   it("leaves literal", () => {
     expect(T.format("``{val}``", { val: 'x' })).toBe('{val}');
     expect(T.format("``[*b*]``")).toBe('[*b*]');
+    expect(T.format("`` [*b*] ``")).toBe('[*b*]');
+    expect(T.format("``aa`` `` bb ``")).toBe('aa bb');
+
+    expect(T.format("`` ``` ``")).toBe("```");
+    expect(T.format("`` ```` ``")).toBe("````");
+    expect(T.format("``` `` ```")).toBe("``");
+    expect(T.format("``` ```` ```")).toBe("````");
+    expect(T.format("``` `````` `````` ```")).toBe("`````` ``````");
+    expect(T.format("```` `````` `````` ````")).toBe("`````` ``````");
     expect(T.format("``[``a``]``")).toBe('[a]');
     expect(T.format("``[*b*]``{val}``[*b*]``", { val: 'x' })).toBe('[*b*]x[*b*]');
     expect(T.format("{val}``[*b*]``{val}", { val: 'x' })).toBe('x[*b*]x');
+  });
+
+  it("not a  literal", () => {
+    expect(T.format("`` a ```")).toBe("`` a ```");
+    expect(T.format("``` a ``")).toBe("``` a ``");
   });
 
   it("localizes numbers", () => {

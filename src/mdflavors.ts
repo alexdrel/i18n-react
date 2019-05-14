@@ -1,5 +1,12 @@
-const R = {
-  "``": /^(.*?)``(.*?)``(.*)$/,
+type RegExpEx = RegExp | [RegExp, [number, number, number]];
+export interface MDFlavor {
+  maybe: RegExp;
+  tags: { [type: string]: RegExpEx };
+}
+
+const R: { [name: string]: RegExpEx } = {
+  "`` ": [/^(.*?(?:(?!`).|^))(``+)\s(.*?)\s\2(?!`)(.*)$/, [1, 3, 4]],
+  "``": /^(.*?)``(?!\s|`)(.*?)``(.*)$/,
   "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
   "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
   "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
@@ -16,10 +23,6 @@ const R = {
   "{}": /^(.*?)\{(.*?)\}(.*)$/,
 };
 
-export interface MDFlavor {
-  maybe: RegExp;
-  tags: { [type: string]: RegExp };
-}
 
 export const mdFlavors: MDFlavor[] = [
   { // V0
@@ -40,6 +43,7 @@ export const mdFlavors: MDFlavor[] = [
   { // V1
     maybe: /[`\*_~\{\[\n]/,
     tags: {
+      literals: R["`` "],
       literal: R["``"],
       strong: R["**"],
       em: R["*"],
@@ -59,26 +63,27 @@ export const mdFlavors: MDFlavor[] = [
   }
 ];
 
-export function mdMatch(md: MDFlavor, value: string) {
+type MDMatch = { tag: string, head: string, body: string, tail: string };
+
+export function mdMatch(md: MDFlavor, value: string): MDMatch | null {
   if (!value.match(md.maybe))
     return null;
 
   const tags = md.tags;
-
-  let match: RegExpExecArray = null,
-    tag: string = null;
+  let match: MDMatch | null = null;
 
   for (let ctag in tags) {
     if (!tags.hasOwnProperty(ctag)) continue;
 
-    const cmatch = tags[ctag].exec(value);
+    const rg = tags[ctag];
+    const [regex, groups] = rg instanceof RegExp ? [rg, [1, 2, 3]] : rg;
+
+    const cmatch = regex.exec(value);
     if (cmatch) {
-      if (match == null || cmatch[1].length < match[1].length) {
-        match = cmatch;
-        tag = ctag;
+      if (match == null || cmatch[groups[0]].length < match.head.length) {
+        match = { tag: ctag, head: cmatch[groups[0]], body: cmatch[groups[1]], tail: cmatch[groups[2]] };
       }
     }
   }
-
-  return match && { tag, head: match[1], body: match[2], tail: match[3] };
+  return match;
 }
