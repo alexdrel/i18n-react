@@ -329,8 +329,32 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 "use strict";
 
 exports.__esModule = true;
+function processLiteral(value) {
+    var token = "``";
+    var begin = value.indexOf(token);
+    if (begin === -1) {
+        return null;
+    }
+    while (value[begin + token.length] === "`") {
+        token += "`";
+    }
+    ;
+    var end = begin;
+    do {
+        end = value.indexOf(token, end + token.length);
+    } while (end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"));
+    if (end === -1) {
+        return null;
+    }
+    return {
+        tag: 'literal',
+        head: value.substring(0, begin),
+        body: value.substring(begin + token.length, end).trim(),
+        tail: value.substring(end + token.length)
+    };
+}
 var R = {
-    "``": /^(.*?)``(.*?)``(.*)$/,
+    "``": processLiteral,
     "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
     "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
     "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
@@ -391,7 +415,17 @@ function mdMatch(md, value) {
     for (var ctag in tags) {
         if (!tags.hasOwnProperty(ctag))
             continue;
-        var cmatch = tags[ctag].exec(value);
+        var tagParser = tags[ctag];
+        if (typeof tagParser === 'function') {
+            var parsed = tagParser(value);
+            if (parsed) {
+                return parsed;
+            }
+            else {
+                continue;
+            }
+        }
+        var cmatch = tagParser.exec(value);
         if (cmatch) {
             if (match == null || cmatch[1].length < match[1].length) {
                 match = cmatch;

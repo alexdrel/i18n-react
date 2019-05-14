@@ -1,13 +1,8 @@
 export interface MDFlavor {
     maybe: RegExp;
     tags: {
-        [type: string]: RegExp;
+        [type: string]: RegExp | Function;
     };
 }
 export declare const mdFlavors: MDFlavor[];
-export declare function mdMatch(md: MDFlavor, value: string): {
-    tag: string;
-    head: string;
-    body: string;
-    tail: string;
-};
+export declare function mdMatch(md: MDFlavor, value: string): any;

@@ -1,5 +1,41 @@
+function trimString(input: string) : string {
+  input = String(input);
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
+  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')
+}
+
+function processLiteral(value: string): object {
+  let token = "``";
+  const begin = value.indexOf(token);
+
+  if (begin === -1) {
+    return null;
+  }
+
+  while(value[begin + token.length] === "`") {
+    token += "`";
+  };
+
+  let end = begin;
+
+  do {
+    end = value.indexOf(token, end + token.length);
+  } while(end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"))
+
+  if (end === -1) {
+    return null;
+  }
+
+  return {
+    tag: 'literal',
+    head: value.substring(0, begin),
+    body: trimString(value.substring(begin + token.length, end)),
+    tail: value.substring(end + token.length),
+  };
+}
+
 const R = {
-  "``": /^(.*?)``(.*?)``(.*)$/,
+  "``": processLiteral,
   "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
   "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
   "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
@@ -18,7 +54,7 @@ const R = {
 
 export interface MDFlavor {
   maybe: RegExp;
-  tags: { [type: string]: RegExp };
+  tags: { [type: string]: RegExp | Function };
 }
 
 export const mdFlavors: MDFlavor[] = [
@@ -71,7 +107,18 @@ export function mdMatch(md: MDFlavor, value: string) {
   for (let ctag in tags) {
     if (!tags.hasOwnProperty(ctag)) continue;
 
-    const cmatch = tags[ctag].exec(value);
+    const tagParser = tags[ctag];
+
+    if (typeof tagParser === 'function') {
+      const parsed = tagParser(value);
+      if (parsed) {
+        return parsed;
+      } else {
+        continue;
+      }
+    }
+
+    const cmatch = tagParser.exec(value);
     if (cmatch) {
       if (match == null || cmatch[1].length < match[1].length) {
         match = cmatch;

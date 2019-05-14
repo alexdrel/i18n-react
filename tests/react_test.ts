@@ -95,8 +95,8 @@ describe("i18n-react", () => {
 
   it("format handles literal", () => {
     T.setOpts({ MDFlavor: 1 });
-    expect(formatHTML("``z[a][b]z``")).toBe("z[a][b]z");
+    expect(formatHTML("``z[a]```[b]z``")).toBe("z[a]```[b]z");
+    expect(formatHTML("```z[a]``[b]z```")).toBe("z[a]``[b]z");
   });
 
 });
-
