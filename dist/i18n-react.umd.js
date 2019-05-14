@@ -329,7 +329,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 "use strict";
 
 exports.__esModule = true;
-function processLiteral(value) {
+;
+function trimString(input) {
+    input = String(input);
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
+    return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+}
+function parseLiteral(value) {
     var token = "``";
     var begin = value.indexOf(token);
     if (begin === -1) {
@@ -349,12 +355,12 @@ function processLiteral(value) {
     return {
         tag: 'literal',
         head: value.substring(0, begin),
-        body: value.substring(begin + token.length, end).trim(),
+        body: trimString(value.substring(begin + token.length, end)),
         tail: value.substring(end + token.length)
     };
 }
 var R = {
-    "``": processLiteral,
+    "``": parseLiteral,
     "*": /^(|.*?\W)\*(\S.*?)\*(|\W.*)$/,
     "**": /^(|.*?\W)\*\*(\S.*?)\*\*(|\W.*)$/,
     "_": /^(|.*?\W)_(\S.*?)_(|\W.*)$/,
