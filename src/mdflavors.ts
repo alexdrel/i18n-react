@@ -10,7 +10,7 @@ export type TagParser = (value: string) => MDMatchResult;
 function trimString(input: string) : string {
   input = String(input);
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
-  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')
+  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
 }
 
 function parseLiteral(value: string): MDMatchResult {
@@ -36,7 +36,7 @@ function parseLiteral(value: string): MDMatchResult {
   }
 
   return {
-    tag: 'literal',
+    tag: "literal",
     head: value.substring(0, begin),
     body: trimString(value.substring(begin + token.length, end)),
     tail: value.substring(end + token.length),
@@ -118,7 +118,7 @@ export function mdMatch(md: MDFlavor, value: string) : MDMatchResult {
 
     const tagParser = tags[ctag];
 
-    if (typeof tagParser === 'function') {
+    if (typeof tagParser === "function") {
       const parsed = tagParser(value);
       if (parsed) {
         return parsed;

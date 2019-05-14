@@ -333,7 +333,7 @@ exports.__esModule = true;
 function trimString(input) {
     input = String(input);
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
-    return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+    return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
 }
 function parseLiteral(value) {
     var token = "``";
@@ -353,7 +353,7 @@ function parseLiteral(value) {
         return null;
     }
     return {
-        tag: 'literal',
+        tag: "literal",
         head: value.substring(0, begin),
         body: trimString(value.substring(begin + token.length, end)),
         tail: value.substring(end + token.length)
@@ -422,7 +422,7 @@ function mdMatch(md, value) {
         if (!tags.hasOwnProperty(ctag))
             continue;
         var tagParser = tags[ctag];
-        if (typeof tagParser === 'function') {
+        if (typeof tagParser === "function") {
             var parsed = tagParser(value);
             if (parsed) {
                 return parsed;
