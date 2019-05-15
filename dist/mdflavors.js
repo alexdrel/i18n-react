@@ -15,7 +15,6 @@ function parseLiteral(value) {
     while (value[begin + token.length] === "`") {
         token += "`";
     }
-    ;
     var end = begin;
     do {
         end = value.indexOf(token, end + token.length);

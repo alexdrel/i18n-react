@@ -4,11 +4,11 @@ export interface MDMatchResult {
     body: string;
     tail: string;
 }
-export declare type TagParser = (value: string) => MDMatchResult;
+export declare type MDTagParser = (value: string) => MDMatchResult;
 export interface MDFlavor {
     maybe: RegExp;
     tags: {
-        [type: string]: RegExp | TagParser;
+        [type: string]: RegExp | MDTagParser;
     };
 }
 export declare const mdFlavors: MDFlavor[];

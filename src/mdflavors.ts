@@ -5,12 +5,12 @@ export interface MDMatchResult {
   tail: string;
 };
 
-export type TagParser = (value: string) => MDMatchResult;
+export type MDTagParser = (value: string) => MDMatchResult;
 
 function trimString(input: string) : string {
   input = String(input);
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
-  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
+  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
 }
 
 function parseLiteral(value: string): MDMatchResult {
@@ -21,15 +21,15 @@ function parseLiteral(value: string): MDMatchResult {
     return null;
   }
 
-  while(value[begin + token.length] === "`") {
+  while (value[begin + token.length] === "`") {
     token += "`";
-  };
+  }
 
   let end = begin;
 
   do {
     end = value.indexOf(token, end + token.length);
-  } while(end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"))
+  } while (end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"))
 
   if (end === -1) {
     return null;
@@ -63,7 +63,7 @@ const R = {
 
 export interface MDFlavor {
   maybe: RegExp;
-  tags: { [type: string]: RegExp | TagParser };
+  tags: { [type: string]: RegExp | MDTagParser };
 }
 
 export const mdFlavors: MDFlavor[] = [
@@ -104,7 +104,7 @@ export const mdFlavors: MDFlavor[] = [
   }
 ];
 
-export function mdMatch(md: MDFlavor, value: string) : MDMatchResult {
+export function mdMatch(md: MDFlavor, value: string): MDMatchResult {
   if (!value.match(md.maybe))
     return null;
 
