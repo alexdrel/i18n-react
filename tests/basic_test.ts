@@ -129,11 +129,10 @@ describe("i18n-react format", () => {
 
   it("leaves literal", () => {
     expect(T.format("``{val}``", { val: 'x' })).toBe('{val}');
-    expect(T.format("``[*b*]``")).toBe('[*b*]');
-    expect(T.format("`` [*b*] ``")).toBe('[*b*]');
+    expect(T.format("``  [*b*]  ``")).toBe(' [*b*] ');
     expect(T.format("``aa`` `` bb ``")).toBe('aa bb');
-
-    expect(T.format("`` ``` ``")).toBe("```");
+    expect(T.format("``  ```  ``")).toBe(" ``` ");
+    expect(T.format("```ab```")).toBe("ab");
     expect(T.format("`` ```` ``")).toBe("````");
     expect(T.format("``` `` ```")).toBe("``");
     expect(T.format("``` ```` ```")).toBe("````");
@@ -147,6 +146,14 @@ describe("i18n-react format", () => {
   it("not a  literal", () => {
     expect(T.format("`` a ```")).toBe("`` a ```");
     expect(T.format("``` a ``")).toBe("``` a ``");
+
+    expect(T.format("``a```")).toBe("``a```");
+    expect(T.format("```a``")).toBe("```a``");
+
+    expect(T.format("`` ```")).toBe("`` ```");
+    expect(T.format("``` ``")).toBe("``` ``");
+    expect(T.format("``` ````")).toBe("``` ````");
+    expect(T.format("```` ```")).toBe("```` ```");
   });
 
   it("localizes numbers", () => {
