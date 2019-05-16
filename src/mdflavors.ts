@@ -7,40 +7,44 @@ export interface MDMatchResult {
 
 export type MDTagParser = (value: string) => MDMatchResult;
 
-function trimString(input: string) : string {
-  input = String(input);
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Polyfill
-  return input.trim ? input.trim() : input.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+function removeLiteralDelimiters(input: string) : string {
+  const { length } = input;
+  return input.substring(input[0] === ' ' ? 1 : 0, input[length - 1] === ' ' ? length - 1 : length);
 }
 
 function parseLiteral(value: string): MDMatchResult {
-  let token = "``";
-  const begin = value.indexOf(token);
+  for (let start = 0; start < value.length;) {
+    let token = "``";
 
-  if (begin === -1) {
-    return null;
+    const begin = value.indexOf(token, start);
+
+    if (begin === -1) {
+      return null;
+    }
+
+    while (value[begin + token.length] === "`") {
+      token += "`";
+    }
+
+    let end = begin;
+
+    do {
+      end = value.indexOf(token, end + token.length);
+    } while (end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"));
+
+    if (end !== -1) {
+      return {
+        tag: "literal",
+        head: value.substring(0, begin),
+        body: removeLiteralDelimiters(value.substring(begin + token.length, end)),
+        tail: value.substring(end + token.length),
+      };
+    }
+
+    start = begin + token.length;
   }
 
-  while (value[begin + token.length] === "`") {
-    token += "`";
-  }
-
-  let end = begin;
-
-  do {
-    end = value.indexOf(token, end + token.length);
-  } while (end !== -1 && (value[end - 1] === "`" || value[end + token.length] === "`"))
-
-  if (end === -1) {
-    return null;
-  }
-
-  return {
-    tag: "literal",
-    head: value.substring(0, begin),
-    body: trimString(value.substring(begin + token.length, end)),
-    tail: value.substring(end + token.length),
-  };
+  return null;
 }
 
 const R = {
