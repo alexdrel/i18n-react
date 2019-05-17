@@ -181,6 +181,10 @@ T.translate('n', { context: 9 })) // 'Number 9'
 You are welcomed to consult examples folder and unit tests for usage details and examples.
 
 ## Breaking changes
+### 0.7
+##### Literal \`\` changed to better match GitHub
+Allows matching number of backticks (with optional whitespace) to form a literal. This allows quoting of the  backtick pairs: ```` ``` `` ``` ```` => ``` `` ``` .
+
 ### 0.6
 ##### Literal \`\` in V1 syntax
 New \`\` syntax  \`\` (in V1 only) to disable MD processing.
