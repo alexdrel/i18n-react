@@ -1,5 +1,5 @@
 import * as React from 'react';
-export declare type NotFound = string | ((key: string, context?: any) => string);
+export declare type NotFound = string | ((key: string, context?: any) => any);
 export interface MDTextOpts {
     MDFlavor?: 0 | 1;
     notFound?: NotFound;

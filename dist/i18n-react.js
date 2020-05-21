@@ -199,17 +199,15 @@ var MDText = /** @class */ (function () {
             trans = (options && options.notFound !== undefined) ? options.notFound :
                 this.notFound !== undefined ? this.notFound :
                     key;
-            if (isFunction(trans)) {
-                trans = trans(key, options);
-            }
-            if (!isString(trans)) {
-                return trans;
-            }
         }
         if (isFunction(trans)) {
-            trans = trans(key, context);
+            var args = context === undefined ? options : context;
+            trans = trans(key, args);
         }
-        return this.format(trans, options);
+        if (isString(trans)) {
+            trans = this.format(trans, options);
+        }
+        return trans;
     };
     MDText.prototype.factory = function (tagF) {
         var _this = this;
