@@ -202,6 +202,9 @@ var MDText = /** @class */ (function () {
             if (isFunction(trans)) {
                 trans = trans(key, options);
             }
+            if (!isString(trans)) {
+                return trans;
+            }
         }
         if (isFunction(trans)) {
             trans = trans(key, context);

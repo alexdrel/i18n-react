@@ -203,6 +203,10 @@ export class MDText {
       if (isFunction(trans)) {
         trans = trans(key, options);
       }
+
+      if (!isString(trans)) {
+        return trans
+      }
     }
 
     if (isFunction(trans)) {
