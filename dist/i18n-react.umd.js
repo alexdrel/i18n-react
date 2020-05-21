@@ -279,6 +279,9 @@ var MDText = /** @class */ (function () {
             trans = (options && options.notFound !== undefined) ? options.notFound :
                 this.notFound !== undefined ? this.notFound :
                     key;
+            if (isFunction(trans)) {
+                trans = trans(key, options);
+            }
         }
         if (isFunction(trans)) {
             trans = trans(key, context);
