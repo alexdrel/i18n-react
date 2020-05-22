@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mdFlavors, MDFlavor, mdMatch } from './mdflavors';
 
-export type NotFound = string | ((key: string, context?: any) => string);
+export type NotFound = string | ((key: string, context?: any) => any);
 
 function isString(s: any): s is string {
   return typeof s === 'string' || s instanceof String;
@@ -202,10 +202,15 @@ export class MDText {
     }
 
     if (isFunction(trans)) {
-      trans = trans(key, context);
+      const args: any = context === undefined ? options : context;
+      trans = trans(key, args);
     }
 
-    return this.format(trans, options);
+    if (isString(trans)) {
+      trans = this.format(trans, options);
+    }
+
+    return trans;
   }
 
   factory(tagF: string) {

@@ -281,9 +281,13 @@ var MDText = /** @class */ (function () {
                     key;
         }
         if (isFunction(trans)) {
-            trans = trans(key, context);
+            var args = context === undefined ? options : context;
+            trans = trans(key, args);
         }
-        return this.format(trans, options);
+        if (isString(trans)) {
+            trans = this.format(trans, options);
+        }
+        return trans;
     };
     MDText.prototype.factory = function (tagF) {
         var _this = this;

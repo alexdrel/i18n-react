@@ -109,6 +109,10 @@ describe("i18n-react translate", () => {
     expect(T1.translate('na.na')).toBe('na.na not found');
     T1 = new MDText({}, { notFound: (key, ctx) => key + ' not found, a:' + ctx.a });
     expect(T1.translate('na.na', { context: { a: 1 } })).toBe('na.na not found, a:1');
+
+    let Fallback = new MDText({ na: { na: 'NA.{val}' } });
+    T1 = new MDText({}, { notFound: (...args) => Fallback.translate(...args) });
+    expect(T1.translate('na.na', { val: 'NA' })).toBe('NA.NA');
   });
 });
 
